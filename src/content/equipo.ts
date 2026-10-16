@@ -8,6 +8,13 @@ import type { L10n } from "@/lib/i18n";
  *
  * Las cifras de la web (personas, instituciones, países) se calculan a partir
  * de esta lista: basta con añadir o quitar a alguien aquí.
+ *
+ * Fotos (public/equipo/, 240 px, 16-10-2026): de la ficha de cada persona en
+ * el Portal de Investigación USAL; las de Ana María Pinto, José Carlos Sánchez
+ * Prieto y Serena Rivetta, que no tienen foto en el portal, de la web del
+ * IUCE; las de Ignacio González y Eloísa Reche, de su perfil de Google Scholar;
+ * la de Amparo Jiménez, de Knowledge Society. El resto no tiene foto pública
+ * en el perfil enlazado y se muestra con sus iniciales.
  */
 
 export type PaisId = "es" | "ie" | "pt";
@@ -111,33 +118,38 @@ export interface Persona {
   institution: string;
   /** Perfil público que enlaza la web anterior */
   profile?: string;
+  /** Foto (public/equipo/…) */
+  photo?: string;
 }
 
 const portalUsal = (id: number) => `https://produccioncientifica.usal.es/investigadores/${id}/detalle`;
 const orcid = (id: string) => `https://orcid.org/${id}`;
+const foto = (slug: string) => `/equipo/${slug}.jpg`;
 
 export const EQUIPO: Persona[] = [
   // Investigadoras principales
-  { name: "Mª José Rodríguez Conde", role: "ip", institution: "usal", profile: portalUsal(56749) },
-  { name: "Susana Olmos Miguelañez", role: "ip", institution: "usal", profile: portalUsal(57518) },
+  { name: "Mª José Rodríguez Conde", role: "ip", institution: "usal", profile: portalUsal(56749), photo: foto("rodriguez-conde") },
+  { name: "Susana Olmos Miguelañez", role: "ip", institution: "usal", profile: portalUsal(57518), photo: foto("olmos-miguelanez") },
 
   // Equipo investigador
-  { name: "Ana Belén González Rogado", role: "investigador", institution: "usal", profile: portalUsal(56131) },
-  { name: "Juan Pablo Hernández Ramos", role: "investigador", institution: "usal", profile: portalUsal(57150) },
-  { name: "Susana Nieto Isidro", role: "investigador", institution: "usal", profile: portalUsal(55912) },
-  { name: "Ana María Pinto Llorente", role: "investigador", institution: "usal", profile: portalUsal(57371) },
-  { name: "José Carlos Sánchez Prieto", role: "investigador", institution: "usal", profile: portalUsal(57383) },
+  { name: "Ana Belén González Rogado", role: "investigador", institution: "usal", profile: portalUsal(56131), photo: foto("gonzalez-rogado") },
+  { name: "Juan Pablo Hernández Ramos", role: "investigador", institution: "usal", profile: portalUsal(57150), photo: foto("hernandez-ramos") },
+  { name: "Susana Nieto Isidro", role: "investigador", institution: "usal", profile: portalUsal(55912), photo: foto("nieto-isidro") },
+  { name: "Ana María Pinto Llorente", role: "investigador", institution: "usal", profile: portalUsal(57371), photo: foto("pinto-llorente") },
+  { name: "José Carlos Sánchez Prieto", role: "investigador", institution: "usal", profile: portalUsal(57383), photo: foto("sanchez-prieto") },
   {
     name: "Ignacio González López",
     role: "investigador",
     institution: "uco",
     profile: "https://scholar.google.com/citations?user=bYLYLswAAAAJ&hl=en",
+    photo: foto("gonzalez-lopez"),
   },
   {
     name: "Eloisa Reche Urbano",
     role: "investigador",
     institution: "uco",
     profile: "https://scholar.google.es/citations?user=I1fMRhEAAAAJ&hl=es",
+    photo: foto("reche-urbano"),
   },
   {
     name: "Mercedes López Aguado",
@@ -150,6 +162,7 @@ export const EQUIPO: Persona[] = [
     role: "investigador",
     institution: "upsa",
     profile: "https://knowledgesociety.usal.es/users/amparo-jim%C3%A9nez-vivas",
+    photo: foto("jimenez-vivas"),
   },
   {
     name: "María Teresa Del Moral Marcos",
@@ -159,13 +172,13 @@ export const EQUIPO: Persona[] = [
   },
 
   // Equipo de trabajo
-  { name: "Alba María del Brio Nieto", role: "trabajo", institution: "usal", profile: portalUsal(1222816) },
-  { name: "Cristina Frade Martínez", role: "trabajo", institution: "usal", profile: portalUsal(148037) },
-  { name: "Marina García Herrero", role: "trabajo", institution: "usal", profile: portalUsal(820219) },
-  { name: "María Holgado Aguadero", role: "trabajo", institution: "usal", profile: portalUsal(818526) },
-  { name: "Carolina Alexandra Martins Azinheiro", role: "trabajo", institution: "usal", profile: portalUsal(182560) },
-  { name: "Alberto Ortiz López", role: "trabajo", institution: "usal", profile: portalUsal(157284) },
-  { name: "Serena Rivetta", role: "trabajo", institution: "usal", profile: portalUsal(148049) },
+  { name: "Alba María del Brio Nieto", role: "trabajo", institution: "usal", profile: portalUsal(1222816), photo: foto("del-brio-nieto") },
+  { name: "Cristina Frade Martínez", role: "trabajo", institution: "usal", profile: portalUsal(148037), photo: foto("frade-martinez") },
+  { name: "Marina García Herrero", role: "trabajo", institution: "usal", profile: portalUsal(820219), photo: foto("garcia-herrero") },
+  { name: "María Holgado Aguadero", role: "trabajo", institution: "usal", profile: portalUsal(818526), photo: foto("holgado-aguadero") },
+  { name: "Carolina Alexandra Martins Azinheiro", role: "trabajo", institution: "usal", profile: portalUsal(182560), photo: foto("martins-azinheiro") },
+  { name: "Alberto Ortiz López", role: "trabajo", institution: "usal", profile: portalUsal(157284), photo: foto("ortiz-lopez") },
+  { name: "Serena Rivetta", role: "trabajo", institution: "usal", profile: portalUsal(148049), photo: foto("rivetta") },
   { name: "Lourdes Sancho Otero", role: "trabajo", institution: "uco", profile: orcid("0000-0002-9999-2593") },
   {
     name: "Sandra Marcos Ortega",

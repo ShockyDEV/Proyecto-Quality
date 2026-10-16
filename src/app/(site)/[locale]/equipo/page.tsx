@@ -74,7 +74,7 @@ function RoleSection({ role, locale }: { role: Exclude<Rol, "ip">; locale: Local
             <ul className="mt-4 grid gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
               {people.map((p) => (
                 <li key={p.name} data-reveal className="flex items-center gap-3.5">
-                  <HexAvatar name={p.name} tone={role === "investigador" ? "petroleo" : "verde"} />
+                  <HexAvatar name={p.name} photo={p.photo} tone={role === "investigador" ? "petroleo" : "verde"} />
                   <div className="min-w-0">
                     <p className="font-semibold leading-snug text-tinta">{p.name}</p>
                     <ProfileLink person={p} locale={locale} />
@@ -104,7 +104,7 @@ export default async function Equipo({ params }: Props) {
           <ul className="mt-7 grid gap-5 md:grid-cols-2">
             {ips.map((p, i) => (
               <li key={p.name} data-reveal style={{ ["--d" as string]: `${i * 90}ms` }} className="tarjeta flex items-center gap-5 p-6">
-                <HexAvatar name={p.name} tone="teja" size="lg" />
+                <HexAvatar name={p.name} photo={p.photo} tone="teja" size="lg" />
                 <div className="min-w-0">
                   <p className="font-display text-xl font-bold leading-tight text-tinta">{p.name}</p>
                   <p className="mt-1 text-sm text-tenue">

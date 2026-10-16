@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { cifrasEquipo, EQUIPO, iniciales, INSTITUCIONES, tipoPerfil } from "@/content/equipo";
 import { TRAYECTORIA } from "@/content/trayectoria";
@@ -18,6 +20,13 @@ describe("equipo", () => {
       if (!p.profile) continue;
       expect(new URL(p.profile).protocol, p.name).toBe("https:");
       expect(tipoPerfil(p.profile).es, p.name).not.toBe("Perfil");
+    }
+  });
+
+  it("cada foto enlazada existe en public/", () => {
+    for (const p of EQUIPO) {
+      if (!p.photo) continue;
+      expect(existsSync(path.join(process.cwd(), "public", p.photo)), p.name).toBe(true);
     }
   });
 
