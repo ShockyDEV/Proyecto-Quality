@@ -4,7 +4,6 @@ import {
   ArrowRight,
   Building2,
   ChartColumn,
-  FileText,
   Globe2,
   GraduationCap,
   Landmark,
@@ -37,7 +36,6 @@ const T = {
   eyebrow: { es: "Proyecto de Generación de Conocimiento 2024", en: "Knowledge Generation Project 2024" },
   cta: { es: "Conoce el proyecto", en: "About the project" },
   team: { es: "Equipo", en: "Team" },
-  reference: { es: "Referencia", en: "Reference" },
   people: { es: "personas", en: "people" },
   institutions: { es: "instituciones", en: "institutions" },
   countries: { es: "países", en: "countries" },
@@ -91,7 +89,6 @@ export default async function Home({ params }: Props) {
   const t = (k: keyof typeof T): string => T[k][locale];
 
   const hitos = [
-    { Icon: FileText, label: `${t("reference")} ${SITE.reference}` },
     { Icon: Users, label: `${cifras.personas} ${t("people")}` },
     { Icon: Building2, label: `${cifras.instituciones} ${t("institutions")}` },
     { Icon: Globe2, label: `${cifras.paises} ${t("countries")}` },
