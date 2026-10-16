@@ -1,0 +1,29 @@
+# dependencias
+/node_modules
+
+# Next.js
+/.next/
+/.next-build/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# producción
+/build
+
+# entorno (las credenciales NUNCA van a git)
+.env
+.env.local
+.env.*.local
+
+# sistema / editores
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# logs
+npm-debug.log*
+*.log
+

@@ -1,0 +1,58 @@
+# Web estática en GitHub Pages (`npm run build:static`).
+#
+# Se regenera en cada push a main y a mano desde la pestaña Actions. La
+# dirección la decide la configuración de Pages del repositorio
+# (actions/configure-pages): sin dominio propio, https://shockydev.github.io/<repo>
+# (con la subcarpeta en todas las rutas); con dominio propio (Settings → Pages →
+# Custom domain, p. ej. quality.grial.eu), ese dominio, sin subcarpeta.
+# No hay que tocar nada aquí.
+name: Web en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  compilar:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v4
+      - id: pages
+        uses: actions/configure-pages@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # configure-pages da la dirección con http:// mientras «Enforce HTTPS» no
+      # está activo; la web se sirve por https, así que las URL canónicas, el
+      # sitemap y robots.txt van siempre con https.
+      - run: NEXT_PUBLIC_SITE_URL="https://${BASE_URL#*://}" npm run build:static
+        env:
+          BASE_URL: ${{ steps.pages.outputs.base_url }}
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  publicar:
+    needs: compilar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
