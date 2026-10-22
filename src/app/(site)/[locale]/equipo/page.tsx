@@ -122,6 +122,7 @@ export default async function Equipo({ params }: Props) {
         <div className="contenedor space-y-14">
           <RoleSection role="investigador" locale={locale} />
           <RoleSection role="trabajo" locale={locale} />
+          <RoleSection role="contrato" locale={locale} />
         </div>
       </div>
     </>

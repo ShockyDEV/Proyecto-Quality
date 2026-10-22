@@ -30,8 +30,8 @@ describe("equipo", () => {
     }
   });
 
-  it("cifras de la web anterior: 26 personas, 8 instituciones, 3 países", () => {
-    expect(cifrasEquipo()).toEqual({ personas: 26, instituciones: 8, paises: 3 });
+  it("cifras: las 26 personas de la web anterior más un contrato, 8 instituciones, 3 países", () => {
+    expect(cifrasEquipo()).toEqual({ personas: 27, instituciones: 8, paises: 3 });
   });
 
   it("iniciales: nombre y primer apellido, sin partículas", () => {

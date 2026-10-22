@@ -95,7 +95,7 @@ export const INSTITUCIONES: Institucion[] = [
   },
 ];
 
-export type Rol = "ip" | "investigador" | "trabajo";
+export type Rol = "ip" | "investigador" | "trabajo" | "contrato";
 
 export const ROLES: Record<Rol, { title: L10n; singular: L10n }> = {
   ip: {
@@ -109,6 +109,10 @@ export const ROLES: Record<Rol, { title: L10n; singular: L10n }> = {
   trabajo: {
     title: { es: "Equipo de trabajo", en: "Work team" },
     singular: { es: "Equipo de trabajo", en: "Work team" },
+  },
+  contrato: {
+    title: { es: "Contratos asociados al proyecto", en: "Project-funded staff" },
+    singular: { es: "Contrato asociado al proyecto", en: "Project-funded staff" },
   },
 };
 
@@ -201,6 +205,9 @@ export const EQUIPO: Persona[] = [
   { name: "Maria Eugenia Neto Ferrao", role: "trabajo", institution: "ubi", profile: orcid("0000-0002-1317-0629") },
   { name: "Maria Pacheco Figueiredo", role: "trabajo", institution: "ipv", profile: orcid("0000-0002-3604-529X") },
   { name: "Eva Fernández de Labastida", role: "trabajo", institution: "unibasq", profile: orcid("0009-0008-0731-5597") },
+
+  // Contratos asociados al proyecto (no estaban en la web anterior; añadido el 22-10-2026)
+  { name: "César Conley", role: "contrato", institution: "usal" },
 ];
 
 export function institucion(id: string): Institucion {
