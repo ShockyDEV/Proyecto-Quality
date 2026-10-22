@@ -148,7 +148,7 @@ export default async function Home({ params }: Props) {
       {/* Ejes */}
       <section aria-labelledby="ejes" className="border-y border-linea bg-pagina py-14 sm:py-16">
         <div className="contenedor">
-          <SectionHeading id="ejes" eyebrow={t("ejesEyebrow")} title={t("ejesTitle")} lead={pick(SITE.statement, locale)} />
+          <SectionHeading id="ejes" eyebrow={t("ejesEyebrow")} title={t("ejesTitle")} />
           <ul className="mt-9 grid gap-5 md:grid-cols-3">
             {EJES.map((eje, i) => {
               const Icon = EJE_ICON[eje.id];

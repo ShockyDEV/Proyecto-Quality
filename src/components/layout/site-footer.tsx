@@ -82,7 +82,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           </div>
           <nav aria-label={pick(UI.sections, locale)}>
             <h2 className="font-sans text-sm font-medium text-white/55">{pick(UI.sections, locale)}</h2>
-            <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <ul className="mt-3 grid gap-y-2 text-sm">
               {NAV.map((item) => (
                 <li key={item.path}>
                   <Link href={href(locale, item.path)} className="transition-colors hover:text-white">

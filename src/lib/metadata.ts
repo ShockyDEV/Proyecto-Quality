@@ -19,7 +19,7 @@ export function pageMetadata(
       languages: { es: href("es", path), en: href("en", path), "x-default": href("es", path) },
     },
     openGraph: {
-      ...(title ? { title: `${title} · QUALITY` } : {}),
+      ...(title ? { title: `${title} | QUALITY` } : {}),
       ...(description ? { description } : {}),
       url: href(locale, path),
     },

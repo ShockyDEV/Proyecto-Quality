@@ -21,11 +21,11 @@ type Props = { children: React.ReactNode; params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Omit<Props, "children">): Promise<Metadata> {
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "es";
-  const title = `QUALITY · ${pick(SITE.title, locale)}`;
+  const title = `QUALITY | ${pick(SITE.title, locale)}`;
   const description = pick(SITE.summary, locale);
   return {
     metadataBase: new URL(siteUrl()),
-    title: { default: title, template: "%s · QUALITY" },
+    title: { default: title, template: "%s | QUALITY" },
     description,
     applicationName: "QUALITY",
     openGraph: {
