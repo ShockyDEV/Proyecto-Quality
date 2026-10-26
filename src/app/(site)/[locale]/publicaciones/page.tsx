@@ -23,6 +23,8 @@ const T = {
   },
   toTeam: { es: "Ir al equipo", en: "Go to the team" },
   openAccess: { es: "Acceso abierto", en: "Open access" },
+  proceedings: { es: "Texto en las actas (PDF)", en: "Text in the proceedings (PDF)" },
+  in: { es: "En", en: "In" },
 } as const;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -39,8 +41,25 @@ function Cita({ p, locale }: { p: Publicacion; locale: Locale }) {
     <li className="border-b border-linea pb-5 last:border-0">
       <p className="text-sm text-tenue">{p.authors}</p>
       <p className="mt-1 font-semibold leading-snug text-tinta">{p.title}</p>
-      <p className="mt-1 text-sm italic text-cuerpo">{p.venue}</p>
+      <p className="mt-1 text-sm leading-relaxed text-cuerpo">
+        {p.editors && (
+          <>
+            {T.in[locale]} {p.editors} (Eds.),{" "}
+          </>
+        )}
+        <i>{p.venue}</i>
+        {p.pages && <> (pp.&nbsp;{p.pages})</>}
+        {p.place && <>, {pick(p.place, locale)}</>}.
+      </p>
       <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+        {p.isbn && <span className="text-tenue">ISBN {p.isbn}</span>}
+        {p.proceedings && (
+          <a href={p.proceedings} target="_blank" rel="noopener noreferrer" className="enlace inline-flex items-center gap-1">
+            {T.proceedings[locale]}
+            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+            <span className="sr-only">{pick(UI.newTab, locale)}</span>
+          </a>
+        )}
         {p.doi && (
           <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noopener noreferrer" className="enlace inline-flex items-center gap-1">
             DOI {p.doi}

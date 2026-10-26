@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { cifrasEquipo, EQUIPO, iniciales, INSTITUCIONES, tipoPerfil } from "@/content/equipo";
+import { PUBLICACIONES } from "@/content/publicaciones";
 import { TRAYECTORIA } from "@/content/trayectoria";
 import { href, stripLocale } from "@/lib/i18n";
 
@@ -46,6 +47,17 @@ describe("trayectoria", () => {
   it("solo hay un proyecto actual y es QUALITY", () => {
     const actuales = TRAYECTORIA.filter((p) => p.current);
     expect(actuales.map((p) => p.acronym)).toEqual(["QUALITY"]);
+  });
+});
+
+describe("publicaciones", () => {
+  it("el enlace a las actas abre la primera página de la comunicación", () => {
+    for (const p of PUBLICACIONES) {
+      if (!p.proceedings) continue;
+      expect(new URL(p.proceedings).protocol, p.title).toBe("https:");
+      expect(p.pages, p.title).toBeDefined();
+      expect(p.proceedings.endsWith(`#page=${p.pages!.split("–")[0]}`), p.title).toBe(true);
+    }
   });
 });
 
