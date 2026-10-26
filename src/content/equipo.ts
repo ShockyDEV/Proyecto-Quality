@@ -206,8 +206,9 @@ export const EQUIPO: Persona[] = [
   { name: "Maria Pacheco Figueiredo", role: "trabajo", institution: "ipv", profile: orcid("0000-0002-3604-529X") },
   { name: "Eva Fernández de Labastida", role: "trabajo", institution: "unibasq", profile: orcid("0009-0008-0731-5597") },
 
-  // Contratos asociados al proyecto (no estaban en la web anterior; añadido el 22-10-2026)
-  { name: "César Conley", role: "contrato", institution: "usal" },
+  // Contratos asociados al proyecto (no estaban en la web anterior; añadido el 22-10-2026).
+  // Su sección va entre el equipo investigador y el equipo de trabajo.
+  { name: "César Conley Torres", role: "contrato", institution: "usal", profile: portalUsal(2492580) },
 ];
 
 export function institucion(id: string): Institucion {

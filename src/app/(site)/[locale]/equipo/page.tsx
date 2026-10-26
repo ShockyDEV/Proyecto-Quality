@@ -121,8 +121,8 @@ export default async function Equipo({ params }: Props) {
       <div className="bg-superficie py-12 sm:py-14">
         <div className="contenedor space-y-14">
           <RoleSection role="investigador" locale={locale} />
-          <RoleSection role="trabajo" locale={locale} />
           <RoleSection role="contrato" locale={locale} />
+          <RoleSection role="trabajo" locale={locale} />
         </div>
       </div>
     </>
