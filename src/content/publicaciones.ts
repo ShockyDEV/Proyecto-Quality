@@ -52,7 +52,10 @@ const ICED26 = {
 };
 const actasIced26 = (page: number) => `https://programme.iced26.es/assets/ICED26-Proceedings.pdf#page=${page}`;
 
-/** Referencias enviadas por Susana Olmos el 26-10-2026. */
+/**
+ * Las tres primeras, enviadas por Susana Olmos el 23-10-2026; la de TEEM, por
+ * César Conley el 26-10-2026 (autoría según el programa del Track 16).
+ */
 export const PUBLICACIONES: Publicacion[] = [
   {
     year: 2026,
@@ -80,5 +83,13 @@ export const PUBLICACIONES: Publicacion[] = [
     title: "Knowing and Acting on Student-Centered Learning: Evidence-Informed Quality Enhancement through Indicators of Student Agency",
     venue: "ECER 2026, European Conference on Educational Research",
     place: { es: "Tampere (Finlandia)", en: "Tampere (Finland)" },
+  },
+  {
+    year: 2026,
+    type: "congreso",
+    authors: "Conley-Torres, C., Rodríguez-Conde, M.-J., & Olmos-Migueláñez, S.",
+    title: "Quality Assessment of University Student-Centered Learning Environments (SCL)",
+    venue: "TEEM 2026, International Conference on Technological Ecosystems for Enhancing Multiculturality (Doctoral Consortium)",
+    place: { es: "Oporto (Portugal)", en: "Porto (Portugal)" },
   },
 ];

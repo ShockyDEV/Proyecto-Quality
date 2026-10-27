@@ -208,7 +208,7 @@ export const EQUIPO: Persona[] = [
 
   // Contratos asociados al proyecto (no estaban en la web anterior; añadido el 22-10-2026).
   // Su sección va entre el equipo investigador y el equipo de trabajo.
-  { name: "César Conley Torres", role: "contrato", institution: "usal", profile: portalUsal(2492580) },
+  { name: "César Conley Torres", role: "contrato", institution: "usal", profile: portalUsal(2492580), photo: foto("conley-torres") },
 ];
 
 export function institucion(id: string): Institucion {
