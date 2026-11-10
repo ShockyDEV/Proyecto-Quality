@@ -4,7 +4,7 @@ import noticias from "@/content/generado/noticias.json";
 
 /**
  * Noticias del proyecto: un Markdown por noticia en contenido/noticias/, que
- * se escribe desde el panel. scripts/contenido.mjs convierte el texto a HTML
+ * se escribe desde el backstage. scripts/contenido.mjs convierte el texto a HTML
  * (sin HTML escrito a mano) y las ordena de la más reciente a la más antigua.
  * Mientras no haya ninguna, «Noticias» no sale en el menú.
  */

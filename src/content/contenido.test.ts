@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { EQUIPO, iniciales, INSTITUCIONES, tipoPerfil } from "@/content/equipo";
 import { href, stripLocale } from "@/lib/i18n";
 
-// El contenido lo editan las investigadoras desde el panel: aquí solo se
+// El contenido se edita desde el backstage: aquí solo se
 // comprueba lo que tiene que cumplirse siempre (scripts/contenido.mjs ya lo
 // valida al generar; ver también generador.test.ts).
 describe("equipo", () => {

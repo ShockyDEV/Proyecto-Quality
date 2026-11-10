@@ -5,3 +5,8 @@ export function generar(root: string): {
   datos: Record<string, any>;
   errores: string[];
 };
+export function escribirGenerado(root: string): {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  datos: Record<string, any>;
+  errores: string[];
+};

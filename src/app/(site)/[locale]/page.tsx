@@ -86,7 +86,7 @@ const EJE_TONO = {
   petroleo: { bar: "bg-petroleo", tile: "bg-petroleo/15 text-petroleo" },
   teja: { bar: "bg-teja", tile: "bg-teja/15 text-teja-texto" },
 } as const;
-/** Iconos de los objetivos, por orden (se editan desde el panel y pueden ser más de tres) */
+/** Iconos de los objetivos, por orden (se editan desde el backstage y pueden ser más de tres) */
 const OBJETIVO_ICON = [Lightbulb, Landmark, Scale, Target];
 
 export default async function Home({ params }: Props) {

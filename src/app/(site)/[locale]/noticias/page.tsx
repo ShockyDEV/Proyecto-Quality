@@ -49,7 +49,7 @@ export default async function Noticias({ params }: Props) {
                 return (
                   <li key={n.slug} data-reveal className="tarjeta overflow-hidden sm:flex">
                     {n.image && (
-                      // Imágenes subidas desde el panel: sin tamaño conocido, van tal cual
+                      // Imágenes subidas desde el backstage: sin tamaño conocido, van tal cual
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={withBase(n.image)}

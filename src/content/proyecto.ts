@@ -2,7 +2,7 @@ import type { L10n } from "@/lib/i18n";
 import textos from "@/content/generado/textos.json";
 
 /**
- * Contenido del proyecto, editable desde el panel (contenido/textos.json).
+ * Contenido del proyecto, editable desde el backstage (contenido/textos.json).
  * Los tres ejes y los dos enfoques son fijos (cada uno tiene su color e
  * icono); los objetivos pueden ser los que se quiera.
  */

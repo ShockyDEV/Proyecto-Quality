@@ -21,7 +21,8 @@ export default function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Todo menos los internos de Next y cualquier ruta con punto (ficheros:
-  // imágenes, favicon, sitemap.xml, robots.txt…). Patrón de next-intl.
-  matcher: ["/((?!_next|.*\\..*).*)"],
+  // Todo menos los internos de Next, el backstage (sin idiomas), el simulador
+  // de GitHub de desarrollo y cualquier ruta con punto (ficheros: imágenes,
+  // favicon, sitemap.xml, robots.txt…). Patrón de next-intl.
+  matcher: ["/((?!_next|backstage|api/|.*\\..*).*)"],
 };

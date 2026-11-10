@@ -2,7 +2,7 @@ import type { L10n } from "@/lib/i18n";
 import textos from "@/content/generado/textos.json";
 
 /**
- * Datos generales del proyecto. Los textos se editan desde el panel
+ * Datos generales del proyecto. Los textos se editan desde el backstage
  * (contenido/textos.json, ver scripts/contenido.mjs); la referencia y el
  * acrónimo son fijos.
  *

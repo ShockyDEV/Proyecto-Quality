@@ -2,7 +2,7 @@ import type { L10n } from "@/lib/i18n";
 import trayectoria from "@/content/generado/trayectoria.json";
 
 /**
- * Proyectos anteriores del equipo, editables desde el panel
+ * Proyectos anteriores del equipo, editables desde el backstage
  * (contenido/trayectoria.json), ordenados por año.
  *
  * POR CONFIRMAR con las IP (no se corrige): la web anterior fecha EFI cuatro

@@ -114,7 +114,10 @@ for (const dir of ["noticias/_", "en/noticias/_"]) {
   rmSync(path.join(OUT, dir), { recursive: true, force: true });
 }
 
-// Imágenes subidas desde el panel (public/media/): las muy grandes se
+// El acceso de prueba del modo local nunca se publica (en GitHub ni existe)
+rmSync(path.join(OUT, "backstage", "acceso.local.json"), { force: true });
+
+// Imágenes subidas desde el backstage (public/media/): las muy grandes se
 // reducen en la copia publicada (el original sigue en el repositorio).
 await optimizarMedia(path.join(OUT, "media"));
 
@@ -157,6 +160,8 @@ const required = [
   "trayectoria/index.html",
   "publicaciones/index.html",
   "noticias/index.html",
+  "backstage/index.html",
+  "backstage/acceso.json",
   "en/index.html",
   "en/equipo/index.html",
   "proyectos-anteriores/index.html",

@@ -2,7 +2,7 @@
 
 Web del proyecto de investigación **QUALITY** (PID2024-156950NB-I00): *Evaluación de la calidad de los entornos de aprendizaje centrados en el estudiante en Universidad. Transferencia hacia la formación docente y la orientación académica.* Sustituye a la web en WordPress de quality.grial.eu.
 
-Es una web **estática**, sin base de datos: parte del sistema de la web de ieTIC 2027 (Next.js exportado a HTML y publicado en GitHub Pages) con la estética de la web del IUCE y la paleta del logo de QUALITY. Noticias, publicaciones, equipo y textos se editan desde un **panel** ([Pages CMS](https://pagescms.org)) que guarda cada cambio en este repositorio.
+Es una web **estática**, sin base de datos: parte del sistema de la web de ieTIC 2027 (Next.js exportado a HTML y publicado en GitHub Pages) con la estética de la web del IUCE y la paleta del logo de QUALITY. Noticias, publicaciones, equipo y textos se editan desde el **backstage** de la propia web (`/backstage/`), que guarda cada cambio en este repositorio.
 
 | | |
 |---|---|
@@ -11,7 +11,7 @@ Es una web **estática**, sin base de datos: parte del sistema de la web de ieTI
 | Tipografías | Manrope (titulares) e Inter (texto), autoalojadas con `next/font` |
 | Idiomas | Español sin prefijo (`/equipo/`) e inglés en `/en/` |
 | Publicación | GitHub Pages, con `.github/workflows/pages.yml` |
-| Panel | Pages CMS (`.pages.yml`), sobre la carpeta `contenido/` |
+| Edición | Backstage en `/backstage/` (`src/backstage/`), sobre la carpeta `contenido/` |
 
 ## Puesta en marcha
 
@@ -24,30 +24,44 @@ npm run preview:static    # sirve out/ en http://localhost:3031 como GitHub Page
 
 Comprobaciones: `npm run typecheck`, `npx eslint src --ext .ts,.tsx` y `npm test` (las ejecuta también la CI).
 
-## Panel de edición (Pages CMS)
+## Backstage (edición)
 
-El panel está en [app.pagescms.org](https://app.pagescms.org). Las investigadoras entran **por invitación, con su correo**, sin cuenta de GitHub. Cada cambio guardado es un commit en `main` («Panel: …») y la web se republica sola en uno o dos minutos.
+En `/backstage/` (no enlazado desde la web y fuera de los buscadores). Se entra **con una contraseña**, sin cuenta de GitHub. Como en la web del programa de ICED26, no hay servidor: el navegador publica directamente con la API de GitHub. Cada cambio guardado es un commit en `main` («Backstage (nombre): …») y la web se republica sola en uno o dos minutos; el backstage avisa cuando ya está publicada.
 
-| En el panel | Archivos |
+| Sección | Archivos |
 |---|---|
-| Noticias | `contenido/noticias/*.md` (un Markdown por noticia, con la versión inglesa opcional) |
+| Noticias | `contenido/noticias/*.md` (Markdown con cabecera; versión inglesa opcional) |
 | Publicaciones | `contenido/publicaciones/*.json` |
 | Equipo | `contenido/equipo/*.json` (fotos en `public/media/equipo/`) |
 | Textos del proyecto | `contenido/textos.json` |
 | Trayectoria | `contenido/trayectoria.json` |
 
-Las imágenes que se suben van a `public/media/`; al publicar, las de más de 400 KB se reducen (1600 px; 480 px las del equipo).
+Las imágenes se preparan en el navegador antes de subirlas (fotos del equipo: recorte cuadrado a 480 px; el resto, 1600 px como mucho) y van a `public/media/`.
 
-`scripts/contenido.mjs` lee `contenido/`, lo **comprueba** (campos obligatorios, instituciones, enlaces, que existan las fotos, fechas…) y escribe `src/content/generado/` (no va a git), que es lo que usa la web. Se ejecuta solo antes de `dev`, `test`, `typecheck` y `build:static`. Si algo no cuadra, para con la lista de errores en castellano: la web no se publica y sigue en línea la versión anterior (el error se ve en la pestaña *Actions*). El inglés que se deje vacío se rellena con el español.
+`scripts/contenido.mjs` lee `contenido/`, lo **comprueba** (campos obligatorios, instituciones, enlaces, que existan las fotos, fechas…) y escribe `src/content/generado/` (no va a git), que es lo que usa la web. Se ejecuta solo antes de `dev`, `test`, `typecheck` y `build:static`. Si algo no cuadra, para con la lista de errores en castellano: la web no se publica y sigue en línea la versión anterior (el backstage lo avisa y el detalle está en la pestaña *Actions*). El backstage hace las mismas comprobaciones antes de guardar.
 
-**Activar el panel** (una sola vez, con la cuenta de GitHub dueña del repositorio): entrar en app.pagescms.org con GitHub, instalar su aplicación de GitHub solo en este repositorio, abrirlo y, en *Settings → Collaborators*, invitar por correo a quien vaya a editar.
+### Acceso
+
+El backstage publica con un **token de GitHub de grano fino** que solo puede escribir en este repositorio. Ese token va **cifrado** en `public/backstage/acceso.json` (público) y lo abre la contraseña de cada persona (AES-GCM con PBKDF2 de 600 000 iteraciones, `scripts/cifrado.mjs`). Al entrar, el token solo se guarda en la pestaña abierta.
+
+Para dar acceso a alguien (o cambiar su contraseña):
+
+1. En GitHub → *Settings → Developer settings → Fine-grained tokens → Generate new token*: solo el repositorio **Proyecto-Quality**, con el permiso **Contents: Read and write**, y la caducidad que se quiera.
+2. `npm run backstage:acceso` y escribir su nombre, el token y su contraseña (12 caracteres o más). El script comprueba el token y escribe `public/backstage/acceso.json`.
+3. Commit y push de ese archivo.
+
+Como el archivo cifrado es público, la defensa es una **contraseña larga**. Si se filtra o alguien deja el proyecto: revocar el token en GitHub, crear otro y repetir el paso 2. Cuando el token caduque, el backstage avisa al entrar.
+
+### Modo local
+
+Con `npm run dev`, `/backstage/` no toca GitHub: un simulador (`src/app/api/github-prueba/`, solo en desarrollo) lee y escribe en la copia local y regenera el contenido. Para entrar hace falta un acceso de prueba: `npm run backstage:acceso -- --local` (crea `public/backstage/acceso.local.json` y `.backstage-local.json`, fuera de git, con un token inventado y la contraseña de prueba).
 
 ## Lo que se cambia en el código
 
 | Fichero | Contenido |
 |---|---|
-| `src/content/instituciones.json` | Instituciones (para añadir una, también en la lista `institucion` de `.pages.yml`) |
-| `src/content/site.ts` | Referencia y acrónimo (los textos vienen del panel) |
+| `src/content/instituciones.json` | Instituciones (el backstage las ofrece en el desplegable del equipo) |
+| `src/content/site.ts` | Referencia y acrónimo (los textos vienen del backstage) |
 | `src/content/equipo.ts` | Papeles del equipo y rótulos de los perfiles |
 | `src/content/entidades.ts` | Logos del pie y de la financiación |
 | `src/content/legal.ts` | Aviso legal, privacidad y accesibilidad |
@@ -71,7 +85,7 @@ Las imágenes que se suben van a `public/media/`; al publicar, las de más de 40
 
 ## Pendiente de las investigadoras principales
 
-- Fechas de inicio y fin, y correo de contacto del proyecto (se puede poner desde el panel, en *Textos del proyecto*).
+- Fechas de inicio y fin, y correo de contacto del proyecto (se puede poner desde el backstage, en *Textos del proyecto*).
 - Fórmula exacta de financiación según la resolución (la web anterior cita a la vez FEDER y FSE+, y un plan estatal «2021-2027»).
 - Título oficial en inglés, si lo hay (el de la web es traducción nuestra).
 - Años de EFI cuatro (2015) y EFI cinco (2012), al revés que su numeración.

@@ -1,7 +1,7 @@
 /**
  * Contenido editable de la web (`npm run contenido`).
  *
- * Lo que se edita desde el panel (Pages CMS, ver .pages.yml) vive en
+ * Lo que se edita desde el backstage de la web (/backstage) vive en
  * contenido/: un JSON por persona y por publicación, un Markdown por noticia y
  * dos JSON con los textos del proyecto y la trayectoria. Este script lo lee,
  * lo comprueba y escribe src/content/generado/*.json, que es lo que usa la web.
@@ -15,49 +15,14 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { load as cargarYaml } from "js-yaml";
-import { Marked } from "marked";
+import { leerNoticia, renderMarkdown, slugify } from "./comun.mjs";
+
+export { slugify };
 
 const ROLES = ["ip", "investigador", "contrato", "trabajo"];
 const TIPOS = ["articulo", "capitulo", "libro", "congreso", "informe"];
 const EJES = ["estudiantes", "entorno", "profesorado"];
 const ENFOQUES = ["cuantitativo", "cualitativo"];
-
-const escapeHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-
-/**
- * Markdown de las noticias → HTML. El HTML que venga escrito a mano se
- * muestra como texto y los enlaces solo pueden ser http(s), mailto o rutas de
- * la propia web.
- */
-const markdown = new Marked({
-  gfm: true,
-  renderer: {
-    html({ text }) {
-      return escapeHtml(text);
-    },
-    link({ href, title, tokens }) {
-      const text = this.parser.parseInline(tokens);
-      if (!/^(https?:|mailto:|\/|#)/i.test(href)) return text;
-      const externo = /^https?:/i.test(href);
-      return `<a href="${escapeHtml(href)}"${title ? ` title="${escapeHtml(title)}"` : ""}${externo ? ' target="_blank" rel="noopener noreferrer"' : ""}>${text}</a>`;
-    },
-    image({ href, title, text }) {
-      if (!/^(https?:|\/)/i.test(href)) return "";
-      return `<img src="${escapeHtml(href)}" alt="${escapeHtml(text)}"${title ? ` title="${escapeHtml(title)}"` : ""} loading="lazy">`;
-    },
-  },
-});
-
-/** Nombre de archivo → dirección: sin tildes, en minúsculas y con guiones. */
-export function slugify(s) {
-  return s
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
 
 /**
  * Lee y comprueba contenido/ dentro de `root`. Devuelve los datos para la web
@@ -126,7 +91,7 @@ export function generar(root) {
   };
   const porOrden = (a, b) => (a.orden ?? Infinity) - (b.orden ?? Infinity);
 
-  // ── instituciones (las define el código, no el panel) ──────────────────
+  // ── instituciones (las define el código, no el backstage) ──────────────────
   const instituciones = JSON.parse(readFileSync(path.join(root, "src/content/instituciones.json"), "utf8"));
   const idsInstitucion = new Set(instituciones.map((i) => i.id));
 
@@ -158,9 +123,10 @@ export function generar(root) {
         id,
         title: bilingue(t.enfoque?.[id]?.titulo, `Enfoque ${id}: título`, dT),
         text: bilingue(t.enfoque?.[id]?.texto, `Enfoque ${id}: texto`, dT),
-        ...(bilingue(t.enfoque?.[id]?.nota, `Enfoque ${id}: nota`, dT, { requerido: false })
-          ? { nota: bilingue(t.enfoque[id].nota, "", dT, { requerido: false }) }
-          : {}),
+        ...(() => {
+          const nota = bilingue(t.enfoque?.[id]?.nota, `Enfoque ${id}: nota`, dT, { requerido: false });
+          return nota ? { nota } : {};
+        })(),
       })),
       transferencia: bilingue(t.transferencia, "Transferencia", dT),
       colaboracion: bilingue(t.colaboracion, "Colaboración internacional", dT),
@@ -242,27 +208,20 @@ export function generar(root) {
   const noticias = archivos("noticias", ".md")
     .map((f) => {
       const d = rel(f);
-      const raw = readFileSync(f, "utf8").replace(/^﻿/, "");
-      const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
-      if (!m) {
-        errores.push(`${d}: falta la cabecera (---) con el título y la fecha`);
-        return undefined;
-      }
-      let fm;
+      let fm, cuerpo;
       try {
-        fm = cargarYaml(m[1]) ?? {};
+        ({ cabecera: fm, cuerpo } = leerNoticia(readFileSync(f, "utf8")));
       } catch (e) {
-        errores.push(`${d}: cabecera ilegible (${e.message})`);
+        errores.push(`${d}: ${e.message}`);
         return undefined;
       }
-      const fecha = fm.fecha instanceof Date ? fm.fecha.toISOString().slice(0, 10) : texto(fm.fecha);
+      const fecha = texto(fm.fecha);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha) || Number.isNaN(Date.parse(fecha))) errores.push(`${d}: la fecha debe ser AAAA-MM-DD`);
       const slug = slugify(path.basename(f, ".md"));
       if (slugs.has(slug)) errores.push(`${d}: hay otra noticia con la misma dirección (${slug})`);
       slugs.add(slug);
-      const cuerpo = m[2].trim();
       const en = fm.ingles ?? {};
-      const html = { es: markdown.parse(cuerpo), en: texto(en.texto) ? markdown.parse(texto(en.texto)) : markdown.parse(cuerpo) };
+      const html = { es: renderMarkdown(cuerpo), en: renderMarkdown(texto(en.texto) || cuerpo) };
       return {
         slug,
         date: fecha,
@@ -288,20 +247,30 @@ export function generar(root) {
   return { datos, errores };
 }
 
+/**
+ * Genera y escribe src/content/generado/. Devuelve los errores (si los hay,
+ * no escribe nada). La usa también el modo local del backstage.
+ */
+export function escribirGenerado(root) {
+  const { datos, errores } = generar(root);
+  if (errores.length) return { datos, errores };
+  const out = path.join(root, "src/content/generado");
+  mkdirSync(out, { recursive: true });
+  for (const [nombre, valor] of Object.entries(datos)) {
+    writeFileSync(path.join(out, `${nombre}.json`), JSON.stringify(valor, null, 2) + "\n");
+  }
+  return { datos, errores };
+}
+
 // ── ejecución directa ────────────────────────────────────────────────────
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-  const { datos, errores } = generar(root);
+  const { datos, errores } = escribirGenerado(root);
   if (errores.length) {
     console.error(`\n✗ El contenido tiene ${errores.length} error(es):\n`);
     for (const e of errores) console.error(`  - ${e}`);
     console.error("");
     process.exit(1);
-  }
-  const out = path.join(root, "src/content/generado");
-  mkdirSync(out, { recursive: true });
-  for (const [nombre, valor] of Object.entries(datos)) {
-    writeFileSync(path.join(out, `${nombre}.json`), JSON.stringify(valor, null, 2) + "\n");
   }
   const { indice } = datos;
   console.log(

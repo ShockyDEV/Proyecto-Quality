@@ -5,6 +5,7 @@
   "description": "Web del proyecto QUALITY (PID2024-156950NB-I00): evaluación de la calidad de los entornos de aprendizaje centrados en el estudiante en Universidad",
   "scripts": {
     "contenido": "node scripts/contenido.mjs",
+    "backstage:acceso": "node scripts/backstage-acceso.mjs",
     "predev": "node scripts/contenido.mjs",
     "dev": "next dev -p 3030",
     "build": "next build",

@@ -30,3 +30,7 @@ Desktop.ini
 npm-debug.log*
 *.log
 
+
+# backstage: acceso de prueba del modo local (scripts/backstage-acceso.mjs --local)
+/public/backstage/acceso.local.json
+/.backstage-local.json
