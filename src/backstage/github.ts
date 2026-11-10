@@ -114,30 +114,27 @@ export async function borrar(token: string, path: string, sha: string, mensaje: 
 export type EstadoPublicacion = "esperando" | "en-curso" | "publicado" | "fallo";
 
 /**
- * En solis, la web la publica scripts/solis-publicar.sh: cada versión
- * publicada lleva version.json con los commits que incluye, y si una
- * compilación falla deja fallo.json.
+ * En solis la web la sirve Next y lee el contenido en cada página: basta con
+ * que solis traiga el commit de GitHub. /api/actualizar lo trae en el momento
+ * (scripts/solis-actualizar.sh) y dice qué commits están ya publicados.
  */
 export const EN_SOLIS = process.env.NEXT_PUBLIC_PUBLICACION === "solis";
 
-async function incluye(archivo: string, commit: string): Promise<boolean> {
+async function estadoEnSolis(commit: string): Promise<EstadoPublicacion> {
   try {
-    const res = await fetch(withBase(`/${archivo}`), { cache: "no-store" });
-    if (!res.ok) return false;
-    const { incluye = [] } = (await res.json()) as { incluye?: string[] };
-    return incluye.includes(commit);
+    const res = await fetch(withBase("/api/actualizar/"), { method: "POST", cache: "no-store" });
+    if (!res.ok) return "en-curso";
+    const r = (await res.json()) as { incluye?: string[]; error?: string };
+    if (r.incluye?.includes(commit)) return r.error ? "fallo" : "publicado";
+    return "en-curso";
   } catch {
-    return false;
+    return "en-curso";
   }
 }
 
 /** Estado de la publicación de la web para un commit. */
 export async function estadoPublicacion(token: string, commit: string): Promise<EstadoPublicacion> {
-  if (EN_SOLIS && !MODO_LOCAL) {
-    if (await incluye("version.json", commit)) return "publicado";
-    if (await incluye("fallo.json", commit)) return "fallo";
-    return "en-curso";
-  }
+  if (EN_SOLIS && !MODO_LOCAL) return estadoEnSolis(commit);
   const r = await pedir<{ workflow_runs: { name: string; status: string; conclusion: string | null }[] }>(
     token,
     `${BASE_REPO}/actions/runs?head_sha=${commit}&per_page=10`,

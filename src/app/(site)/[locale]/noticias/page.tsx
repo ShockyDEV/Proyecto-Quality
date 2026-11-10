@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Newspaper } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
-import { fechaLarga, NOTICIAS } from "@/content/noticias";
+import { fechaLarga, noticias } from "@/content/noticias";
 import { withBase } from "@/lib/base-path";
 import { href, pick } from "@/lib/i18n";
 import { localeFrom, pageMetadata } from "@/lib/metadata";
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = await localeFrom(params);
   return {
     ...pageMetadata(locale, "/noticias", T.title[locale], T.lead[locale]),
-    ...(NOTICIAS.length === 0 ? { robots: { index: false } } : {}),
+    ...(noticias().length === 0 ? { robots: { index: false } } : {}),
   };
 }
 
@@ -37,14 +37,14 @@ export default async function Noticias({ params }: Props) {
 
       <section className="bg-superficie py-14 sm:py-16">
         <div className="contenedor max-w-4xl">
-          {NOTICIAS.length === 0 ? (
+          {noticias().length === 0 ? (
             <div className="tarjeta flex items-center gap-4 p-7">
               <Newspaper className="h-8 w-8 shrink-0 text-petroleo" aria-hidden />
               <p className="leading-relaxed text-cuerpo">{T.empty[locale]}</p>
             </div>
           ) : (
             <ul className="space-y-6">
-              {NOTICIAS.map((n) => {
+              {noticias().map((n) => {
                 const enlace = href(locale, `/noticias/${n.slug}`);
                 return (
                   <li key={n.slug} data-reveal className="tarjeta overflow-hidden sm:flex">

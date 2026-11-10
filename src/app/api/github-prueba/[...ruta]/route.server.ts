@@ -25,6 +25,8 @@ const shaGit = (buf: Buffer) => createHash("sha1").update(`blob ${buf.length}\0`
 const json = (data: unknown, status = 200) => NextResponse.json(data, { status });
 
 function autorizado(req: NextRequest) {
+  // Solo en `npm run dev`: en el servidor de solis no existe
+  if (process.env.NODE_ENV !== "development") return false;
   const archivo = path.join(ROOT, ".backstage-local.json");
   if (!existsSync(archivo)) return false;
   const { token } = JSON.parse(readFileSync(archivo, "utf8"));

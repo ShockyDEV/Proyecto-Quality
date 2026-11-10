@@ -1,14 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import "@/app/globals.css";
 import { fontVariables } from "@/lib/fonts";
 import { SiteHeader } from "@/components/layout/site-header";
+import { nav } from "@/content/nav";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { RevealObserver } from "@/components/ui/reveal-observer";
 import { REVEAL_BOOT, THEME_BOOT } from "@/lib/reveal-boot";
 import { isLocale, LOCALES, LOCALE_LABELS, pick, type Locale } from "@/lib/i18n";
 import { SITE, siteUrl } from "@/content/site";
 import { withBase } from "@/lib/base-path";
+import { STATIC_EXPORT } from "@/lib/build-mode";
 
 /** Solo existen /… (es) y /en/…; cualquier otro prefijo es 404. */
 export const dynamicParams = false;
@@ -59,6 +62,8 @@ export const viewport: Viewport = {
 export default async function SiteLayout({ children, params }: Props) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
+  // En el servidor (solis), cada visita se pinta con el contenido del momento
+  if (!STATIC_EXPORT) await connection();
 
   return (
     // suppressHydrationWarning: los scripts de <head> añaden data-revela y .dark antes de hidratar
@@ -68,7 +73,7 @@ export default async function SiteLayout({ children, params }: Props) {
       </head>
       <body className="flex min-h-dvh flex-col">
         <RevealObserver />
-        <SiteHeader locale={locale} />
+        <SiteHeader locale={locale} nav={nav()} />
         <main id="contenido" className="flex-1">
           {children}
         </main>

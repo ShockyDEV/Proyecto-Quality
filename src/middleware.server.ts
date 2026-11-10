@@ -16,13 +16,14 @@ export default function middleware(req: NextRequest) {
     return NextResponse.redirect(url, 308);
   }
   const url = req.nextUrl.clone();
-  url.pathname = `/es${pathname === "/" ? "/" : pathname}`;
+  url.pathname = `/es${pathname}`;
   return NextResponse.rewrite(url);
 }
 
 export const config = {
   // Todo menos los internos de Next, el backstage (sin idiomas), el simulador
   // de GitHub de desarrollo y cualquier ruta con punto (ficheros: imágenes,
-  // favicon, sitemap.xml, robots.txt…). Patrón de next-intl.
-  matcher: ["/((?!_next|backstage|api/|.*\\..*).*)"],
+  // favicon, sitemap.xml, robots.txt…). Patrón de next-intl. La portada («/»)
+  // tampoco pasa por aquí: tiene su ruta propia en app/(portada).
+  matcher: ["/((?!_next|backstage|api/|.*\\..*).+)"],
 };

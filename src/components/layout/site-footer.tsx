@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Mail } from "lucide-react";
 import { ENTIDADES, LOGO_FINANCIACION } from "@/content/entidades";
-import { LEGAL_NAV, NAV, UI } from "@/content/ui";
+import { nav } from "@/content/nav";
+import { LEGAL_NAV, UI } from "@/content/ui";
 import { SITE } from "@/content/site";
 import { href, pick, type Locale } from "@/lib/i18n";
 
@@ -83,7 +84,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <nav aria-label={pick(UI.sections, locale)}>
             <h2 className="font-sans text-sm font-medium text-white/55">{pick(UI.sections, locale)}</h2>
             <ul className="mt-3 grid gap-y-2 text-sm">
-              {NAV.map((item) => (
+              {nav().map((item) => (
                 <li key={item.path}>
                   <Link href={href(locale, item.path)} className="transition-colors hover:text-white">
                     {pick(item.label, locale)}

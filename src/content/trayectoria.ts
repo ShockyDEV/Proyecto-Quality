@@ -1,5 +1,5 @@
 import type { L10n } from "@/lib/i18n";
-import trayectoria from "@/content/generado/trayectoria.json";
+import { leerGenerado } from "@/content/leer";
 
 /**
  * Proyectos anteriores del equipo, editables desde el backstage
@@ -18,4 +18,4 @@ export interface ProyectoAnterior {
   current?: boolean;
 }
 
-export const TRAYECTORIA = trayectoria as ProyectoAnterior[];
+export const trayectoria = () => leerGenerado<ProyectoAnterior[]>("trayectoria");

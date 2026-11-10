@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, BookOpenText } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
-import { PUBLICACIONES, TIPOS, type Publicacion } from "@/content/publicaciones";
+import { publicaciones, TIPOS, type Publicacion } from "@/content/publicaciones";
 import { UI } from "@/content/ui";
 import { href, pick, type Locale } from "@/lib/i18n";
 import { localeFrom, pageMetadata } from "@/lib/metadata";
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     ...pageMetadata(locale, "/publicaciones", T.title[locale], T.lead[locale]),
     // Sin publicaciones, la página no se ofrece a los buscadores
-    ...(PUBLICACIONES.length === 0 ? { robots: { index: false } } : {}),
+    ...(publicaciones().length === 0 ? { robots: { index: false } } : {}),
   };
 }
 
@@ -81,7 +81,7 @@ function Cita({ p, locale }: { p: Publicacion; locale: Locale }) {
 
 export default async function Publicaciones({ params }: Props) {
   const locale = await localeFrom(params);
-  const years = [...new Set(PUBLICACIONES.map((p) => p.year))].sort((a, b) => b - a);
+  const years = [...new Set(publicaciones().map((p) => p.year))].sort((a, b) => b - a);
 
   return (
     <>
@@ -109,7 +109,7 @@ export default async function Publicaciones({ params }: Props) {
                     {year}
                   </h2>
                   {(Object.keys(TIPOS) as (keyof typeof TIPOS)[]).map((tipo) => {
-                    const items = PUBLICACIONES.filter((p) => p.year === year && p.type === tipo);
+                    const items = publicaciones().filter((p) => p.year === year && p.type === tipo);
                     if (items.length === 0) return null;
                     return (
                       <div key={tipo} className="mt-6">

@@ -3,8 +3,8 @@ import Link from "next/link";
 import { ArrowRight, ChartColumn, Globe2, MessagesSquare, Share2 } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { DESCRIPCION, EJES, EJE_COLOR } from "@/content/proyecto";
-import { EQUIPO, institucion } from "@/content/equipo";
+import { DESCRIPCION, ejes, EJE_COLOR } from "@/content/proyecto";
+import { equipo, institucion } from "@/content/equipo";
 import { SITE } from "@/content/site";
 import { href, pick } from "@/lib/i18n";
 import { localeFrom, pageMetadata } from "@/lib/metadata";
@@ -45,7 +45,7 @@ const TONO = {
 export default async function Proyecto({ params }: Props) {
   const locale = await localeFrom(params);
   const t = (k: keyof typeof T): string => T[k][locale];
-  const ips = EQUIPO.filter((p) => p.role === "ip");
+  const ips = equipo().filter((p) => p.role === "ip");
   const enfoqueIcon = [ChartColumn, MessagesSquare];
 
   const ficha = [
@@ -66,7 +66,7 @@ export default async function Proyecto({ params }: Props) {
             <div>
               <SectionHeading eyebrow={t("objetoEyebrow")} title={t("objetoTitle")} />
               <ul className="mt-7 space-y-4">
-                {EJES.map((eje) => (
+                {ejes().map((eje) => (
                   <li key={eje.id} data-reveal className={cn("border-l-[3px] pl-4", TONO[EJE_COLOR[eje.id]])}>
                     <h3 className="text-base font-bold">{pick(eje.title, locale)}</h3>
                     <p className="mt-1 leading-relaxed text-cuerpo">{pick(eje.text, locale)}</p>

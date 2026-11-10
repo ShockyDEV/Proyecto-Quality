@@ -1,5 +1,5 @@
 import { GraduationCap, Presentation, School, Search } from "lucide-react";
-import { EJES, EJE_COLOR, type EjeId } from "@/content/proyecto";
+import { ejes, EJE_COLOR, type EjeId } from "@/content/proyecto";
 import { HexPattern } from "@/components/ui/hex-pattern";
 import { pick, type Locale } from "@/lib/i18n";
 
@@ -86,7 +86,7 @@ export function EjesEsquema({ locale, label }: { locale: Locale; label: string }
           ))}
         </g>
 
-        {EJES.map((eje, i) => {
+        {ejes().map((eje, i) => {
           const { x, y, Icon } = NODOS[eje.id];
           const c = COLOR[EJE_COLOR[eje.id]];
           const rows = lineas(pick(eje.title, locale));

@@ -19,9 +19,9 @@ import {
 import { EjesEsquema } from "@/components/home/ejes-esquema";
 import { HexMark } from "@/components/ui/hex-mark";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { DESCRIPCION, EJES, EJE_COLOR, OBJETIVOS, type EjeId } from "@/content/proyecto";
-import { cifrasEquipo, EQUIPO, INSTITUCIONES, PAISES, type PaisId } from "@/content/equipo";
-import { fechaLarga, NOTICIAS } from "@/content/noticias";
+import { DESCRIPCION, ejes, EJE_COLOR, objetivos, type EjeId } from "@/content/proyecto";
+import { cifrasEquipo, equipo, INSTITUCIONES, PAISES, type PaisId } from "@/content/equipo";
+import { fechaLarga, noticias } from "@/content/noticias";
 import { SITE } from "@/content/site";
 import { href, pick, type Locale } from "@/lib/i18n";
 import { localeFrom, pageMetadata } from "@/lib/metadata";
@@ -110,7 +110,7 @@ export default async function Home({ params }: Props) {
     pais,
     instituciones: INSTITUCIONES.filter((i) => i.country === pais).map((i) => ({
       ...i,
-      miembros: EQUIPO.filter((p) => p.institution === i.id).length,
+      miembros: equipo().filter((p) => p.institution === i.id).length,
     })),
   }));
 
@@ -156,7 +156,7 @@ export default async function Home({ params }: Props) {
         <div className="contenedor">
           <SectionHeading id="ejes" eyebrow={t("ejesEyebrow")} title={t("ejesTitle")} />
           <ul className="mt-9 grid gap-5 md:grid-cols-3">
-            {EJES.map((eje, i) => {
+            {ejes().map((eje, i) => {
               const Icon = EJE_ICON[eje.id];
               const tono = EJE_TONO[EJE_COLOR[eje.id]];
               return (
@@ -207,7 +207,7 @@ export default async function Home({ params }: Props) {
         <div className="contenedor">
           <SectionHeading id="objetivos" eyebrow={t("objetivosEyebrow")} title={t("objetivosTitle")} />
           <ul className="mt-8 grid gap-5 md:grid-cols-3">
-            {OBJETIVOS.map((o, i) => {
+            {objetivos().map((o, i) => {
               const Icon = OBJETIVO_ICON[i % OBJETIVO_ICON.length];
               return (
                 <li key={i} data-reveal style={{ ["--d" as string]: `${i * 90}ms` }} className="flex gap-4 rounded-lg bg-superficie p-6 shadow-tarjeta">
@@ -221,12 +221,12 @@ export default async function Home({ params }: Props) {
       </section>
 
       {/* Últimas noticias (solo si hay) */}
-      {NOTICIAS.length > 0 && (
+      {noticias().length > 0 && (
         <section aria-labelledby="noticias" className="bg-superficie py-14 sm:py-16">
           <div className="contenedor">
             <SectionHeading id="noticias" eyebrow={t("noticiasEyebrow")} title={t("noticiasTitle")} />
             <ul className="mt-8 grid gap-5 md:grid-cols-3">
-              {NOTICIAS.slice(0, 3).map((n, i) => (
+              {noticias().slice(0, 3).map((n, i) => (
                 <li key={n.slug} data-reveal style={{ ["--d" as string]: `${i * 90}ms` }} className="tarjeta flex flex-col p-6">
                   <p className="text-sm text-tenue">
                     <time dateTime={n.date}>{fechaLarga(n.date, locale)}</time>

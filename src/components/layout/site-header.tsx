@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { NAV, UI } from "@/content/ui";
+import type { EnlaceMenu } from "@/content/nav";
+import { UI } from "@/content/ui";
 import { withBase } from "@/lib/base-path";
 import { HomeLink } from "@/components/ui/home-link";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -21,7 +22,7 @@ import { cn } from "@/lib/cn";
  * completa y evita que el router de Next reutilice el árbol del otro idioma
  * (lección aprendida en iuce-web).
  */
-export function SiteHeader({ locale }: { locale: Locale }) {
+export function SiteHeader({ locale, nav }: { locale: Locale; nav: EnlaceMenu[] }) {
   const pathname = stripLocale(usePathname() || "/");
   const [open, setOpen] = useState(false);
 
@@ -61,7 +62,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
 
           <nav aria-label={pick(UI.mainNav, locale)} className="hidden h-full md:block">
             <ul className="flex h-full items-center gap-7">
-              {NAV.map((item) => {
+              {nav.map((item) => {
                 const active = isActive(item.path);
                 return (
                   <li key={item.path} className="h-full">
@@ -100,7 +101,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         {/* Menú móvil: se despliega bajo la barra */}
         <nav id="menu-movil" hidden={!open} aria-label={pick(UI.mainNav, locale)} className="border-t border-linea md:hidden">
           <ul className="contenedor divide-y divide-linea py-2">
-            {NAV.map((item) => {
+            {nav.map((item) => {
               const active = isActive(item.path);
               return (
                 <li key={item.path}>

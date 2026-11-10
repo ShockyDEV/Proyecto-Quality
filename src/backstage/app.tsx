@@ -228,7 +228,7 @@ function Panel({ sesion, onSalir }: { sesion: Sesion; onSalir: () => void }) {
         }
         setPublicacion((p) => (p && p.commit === publicacion.commit ? { ...p, estado, intentos: p.intentos + 1 } : p));
       },
-      MODO_LOCAL ? 800 : 4000,
+      MODO_LOCAL ? 800 : EN_SOLIS ? 1500 : 4000,
     );
     return () => clearTimeout(t);
   }, [publicacion, token]);
@@ -603,7 +603,7 @@ function AvisoPublicacion({
           {sinRespuesta
             ? "Guardado. La publicación está tardando más de lo normal: mira la web dentro de un rato."
             : enCurso
-              ? `Guardado. Publicando la web, suele tardar ${EN_SOLIS ? "menos de un minuto" : "uno o dos minutos"}…`
+              ? `Guardado. Publicando la web, suele tardar ${EN_SOLIS ? "unos segundos" : "uno o dos minutos"}…`
               : estado === "publicado"
                 ? "Publicado en la web."
                 : "Guardado, pero la web no se ha podido publicar: el contenido tiene algún error. Avisa a quien gestiona la web."}

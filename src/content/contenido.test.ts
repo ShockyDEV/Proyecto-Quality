@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { EQUIPO, iniciales, INSTITUCIONES, tipoPerfil } from "@/content/equipo";
+import { equipo, iniciales, INSTITUCIONES, tipoPerfil } from "@/content/equipo";
 import { href, stripLocale } from "@/lib/i18n";
 
 // El contenido se edita desde el backstage: aquí solo se
@@ -10,15 +10,15 @@ import { href, stripLocale } from "@/lib/i18n";
 describe("equipo", () => {
   it("cada persona pertenece a una institución conocida", () => {
     const ids = new Set(INSTITUCIONES.map((i) => i.id));
-    for (const p of EQUIPO) expect(ids.has(p.institution), p.name).toBe(true);
+    for (const p of equipo()) expect(ids.has(p.institution), p.name).toBe(true);
   });
 
   it("no hay nombres repetidos", () => {
-    expect(new Set(EQUIPO.map((p) => p.name)).size).toBe(EQUIPO.length);
+    expect(new Set(equipo().map((p) => p.name)).size).toBe(equipo().length);
   });
 
   it("cada foto enlazada existe en public/", () => {
-    for (const p of EQUIPO) {
+    for (const p of equipo()) {
       if (!p.photo) continue;
       expect(existsSync(path.join(process.cwd(), "public", p.photo)), p.name).toBe(true);
     }

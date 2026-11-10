@@ -1,6 +1,6 @@
 import type { L10n, Locale } from "@/lib/i18n";
 import { BASE_PATH } from "@/lib/base-path";
-import noticias from "@/content/generado/noticias.json";
+import { leerGenerado } from "@/content/leer";
 
 /**
  * Noticias del proyecto: un Markdown por noticia en contenido/noticias/, que
@@ -24,10 +24,10 @@ export interface Noticia {
   english: boolean;
 }
 
-export const NOTICIAS = noticias as Noticia[];
+export const noticias = () => leerGenerado<Noticia[]>("noticias");
 
 export function noticia(slug: string): Noticia | undefined {
-  return NOTICIAS.find((n) => n.slug === slug);
+  return noticias().find((n) => n.slug === slug);
 }
 
 /** «10 de noviembre de 2026» / «10 November 2026» */

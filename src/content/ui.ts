@@ -1,23 +1,4 @@
 import type { L10n } from "@/lib/i18n";
-// Solo el recuento: la cabecera es de cliente y no debe cargar todo el contenido
-import indice from "@/content/generado/indice.json";
-
-/**
- * Navegación principal (mismas rutas en los dos idiomas; EN con prefijo /en).
- * Las rutas son las de la web anterior, para no romper enlaces.
- * «Publicaciones» y «Noticias» solo aparecen cuando hay alguna.
- */
-const ALL_NAV: { path: string; label: L10n }[] = [
-  { path: "/el-proyecto", label: { es: "El proyecto", en: "The project" } },
-  { path: "/equipo", label: { es: "Equipo", en: "Team" } },
-  { path: "/publicaciones", label: { es: "Publicaciones", en: "Publications" } },
-  { path: "/noticias", label: { es: "Noticias", en: "News" } },
-  { path: "/trayectoria", label: { es: "Trayectoria", en: "Track record" } },
-];
-
-export const NAV = ALL_NAV.filter(
-  (n) => (n.path !== "/publicaciones" || indice.publicaciones > 0) && (n.path !== "/noticias" || indice.noticias > 0),
-);
 
 export const LEGAL_NAV: { path: string; label: L10n }[] = [
   { path: "/aviso-legal", label: { es: "Aviso legal", en: "Legal notice" } },

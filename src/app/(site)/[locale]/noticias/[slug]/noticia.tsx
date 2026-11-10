@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
-import { conBase, fechaLarga, noticia, NOTICIAS } from "@/content/noticias";
+import { conBase, fechaLarga, noticia, noticias } from "@/content/noticias";
 import { withBase } from "@/lib/base-path";
 import { href, LOCALES, pick, type Locale } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/metadata";
@@ -11,13 +11,17 @@ import { pageMetadata } from "@/lib/metadata";
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 /**
+ * Ficha de una noticia. La página está repartida en page.static.tsx (versión
+ * estática: solo las noticias que hay al exportar) y page.server.tsx (servidor
+ * de solis: también las que se guardan después, sin recompilar).
+ *
  * Sin noticias, la exportación estática no admite una ruta dinámica vacía:
  * se genera una página «_» que da 404 y scripts/build-static.mjs la borra.
  */
 const VACIA = "_";
 
 export function generateStaticParams() {
-  const slugs = NOTICIAS.length ? NOTICIAS.map((n) => n.slug) : [VACIA];
+  const slugs = noticias().length ? noticias().map((n) => n.slug) : [VACIA];
   return LOCALES.flatMap((locale) => slugs.map((slug) => ({ locale, slug })));
 }
 

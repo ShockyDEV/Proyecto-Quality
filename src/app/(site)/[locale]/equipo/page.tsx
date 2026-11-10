@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { SectionHeading } from "@/components/ui/section-heading";
 import {
   cifrasEquipo,
-  EQUIPO,
+  equipo,
   institucion,
   PAISES,
   porInstitucion,
@@ -92,7 +92,7 @@ function RoleSection({ role, locale }: { role: Exclude<Rol, "ip">; locale: Local
 export default async function Equipo({ params }: Props) {
   const locale = await localeFrom(params);
   const c = cifrasEquipo();
-  const ips = EQUIPO.filter((p) => p.role === "ip");
+  const ips = equipo().filter((p) => p.role === "ip");
 
   return (
     <>

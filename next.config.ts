@@ -1,15 +1,19 @@
 import type { NextConfig } from "next";
 
 /**
- * La web es estática (GitHub Pages), sin base de datos ni panel. Dos modos
- * con el mismo código (ver src/lib/build-mode.ts):
+ * Sin base de datos: el contenido son archivos (contenido/). Tres usos con el
+ * mismo código (ver src/lib/build-mode.ts):
  * - desarrollo (`npm run dev`): el middleware sirve el español sin prefijo;
- * - estático (STATIC_EXPORT=1, `npm run build:static`): genera out/.
+ * - estático (STATIC_EXPORT=1, `npm run build:static`): genera out/ (GitHub Pages);
+ * - servidor (`next build` + `next start`, en solis): cada página se pinta con
+ *   el contenido del momento, así que los guardados del backstage salen al
+ *   instante (scripts/solis-servidor.sh).
  */
 const STATIC_EXPORT = process.env.STATIC_EXPORT === "1";
-// Subcarpeta de GitHub Pages sin dominio propio (p. ej. "/QUALITY-WEB"); el
-// flujo de Pages la saca de actions/configure-pages. Ver src/lib/base-path.ts.
-const BASE_PATH = STATIC_EXPORT ? (process.env.PAGES_BASE_PATH || "").replace(/\/$/, "") : "";
+// Subcarpeta en la que vive la web: la de GitHub Pages sin dominio propio
+// (el flujo de Pages la saca de actions/configure-pages) o la de solis
+// («/quality», scripts/solis-*.sh). Vacía en desarrollo. Ver src/lib/base-path.ts.
+const BASE_PATH = (process.env.PAGES_BASE_PATH || "").replace(/\/$/, "");
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -30,9 +34,11 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Sin servidor no hay optimizador de imágenes: se sirven tal cual (los
   // ficheros de public/ ya están a su tamaño), con la subcarpeta delante.
-  images: STATIC_EXPORT
-    ? { loader: "custom", loaderFile: "./src/lib/static-image-loader.ts" }
-    : { unoptimized: true },
+  // (también en el servidor de solis, que no las optimiza: ya van a su tamaño)
+  images:
+    STATIC_EXPORT || BASE_PATH
+      ? { loader: "custom", loaderFile: "./src/lib/static-image-loader.ts" }
+      : { unoptimized: true },
   // Tipos y lint se comprueban en CI (npm run typecheck, eslint); aquí
   // chocarían los tipos de rutas que Next genera para cada modo.
   ...(STATIC_EXPORT ? { typescript: { ignoreBuildErrors: true }, eslint: { ignoreDuringBuilds: true } } : {}),

@@ -1,5 +1,5 @@
 import type { L10n } from "@/lib/i18n";
-import textos from "@/content/generado/textos.json";
+import { leerGenerado } from "@/content/leer";
 
 /**
  * Contenido del proyecto, editable desde el backstage (contenido/textos.json).
@@ -16,14 +16,35 @@ export const EJE_COLOR: Record<EjeId, "verde" | "petroleo" | "teja"> = {
   profesorado: "teja",
 };
 
-export const EJES = textos.ejes as { id: EjeId; title: L10n; text: L10n }[];
+interface Textos {
+  ejes: { id: EjeId; title: L10n; text: L10n }[];
+  objetivos: { text: L10n }[];
+  descripcion: {
+    objeto: L10n;
+    enfoque: { id: "cuantitativo" | "cualitativo"; title: L10n; text: L10n; nota?: L10n }[];
+    transferencia: L10n;
+    colaboracion: L10n;
+  };
+}
+// Se leen en cada página (ver content/leer.ts): en solis cambian sin recompilar
+const textos = () => leerGenerado<Textos>("textos");
 
-export const OBJETIVOS = textos.objetivos as { text: L10n }[];
+export const ejes = () => textos().ejes;
+
+export const objetivos = () => textos().objetivos;
 
 /** Página «El proyecto», por apartados. */
-export const DESCRIPCION = textos.descripcion as {
-  objeto: L10n;
-  enfoque: { id: "cuantitativo" | "cualitativo"; title: L10n; text: L10n; nota?: L10n }[];
-  transferencia: L10n;
-  colaboracion: L10n;
+export const DESCRIPCION = {
+  get objeto() {
+    return textos().descripcion.objeto;
+  },
+  get enfoque() {
+    return textos().descripcion.enfoque;
+  },
+  get transferencia() {
+    return textos().descripcion.transferencia;
+  },
+  get colaboracion() {
+    return textos().descripcion.colaboracion;
+  },
 };

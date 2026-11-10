@@ -1,4 +1,4 @@
-import publicaciones from "@/content/generado/publicaciones.json";
+import { leerGenerado } from "@/content/leer";
 import type { Publicacion } from "@/content/publicaciones-base";
 
 export * from "@/content/publicaciones-base";
@@ -13,4 +13,4 @@ export * from "@/content/publicaciones-base";
  * «Orden» del backstage (los menores antes) y, a igualdad, por título.
  */
 
-export const PUBLICACIONES = publicaciones as Publicacion[];
+export const publicaciones = () => leerGenerado<Publicacion[]>("publicaciones");

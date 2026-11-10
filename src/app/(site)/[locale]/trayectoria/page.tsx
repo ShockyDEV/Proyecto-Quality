@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowUpRight } from "lucide-react";
 import { PageHeader } from "@/components/ui/page-header";
-import { TRAYECTORIA } from "@/content/trayectoria";
+import { trayectoria } from "@/content/trayectoria";
 import { UI } from "@/content/ui";
 import { pick } from "@/lib/i18n";
 import { localeFrom, pageMetadata } from "@/lib/metadata";
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Trayectoria({ params }: Props) {
   const locale = await localeFrom(params);
-  const items = [...TRAYECTORIA].sort((a, b) => a.year - b.year);
+  const items = [...trayectoria()].sort((a, b) => a.year - b.year);
 
   return (
     <>

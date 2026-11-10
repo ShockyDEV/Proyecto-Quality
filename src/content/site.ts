@@ -1,5 +1,5 @@
 import type { L10n } from "@/lib/i18n";
-import textos from "@/content/generado/textos.json";
+import { leerGenerado } from "@/content/leer";
 
 /**
  * Datos generales del proyecto. Los textos se editan desde el backstage
@@ -10,23 +10,52 @@ import textos from "@/content/generado/textos.json";
  * financiación según la resolución (la web anterior cita a la vez FEDER y
  * FSE+, y un plan estatal «2021-2027»; se deja tal cual).
  */
+interface Textos {
+  title: L10n;
+  subtitle: L10n;
+  statement: L10n;
+  summary: L10n;
+  call: L10n;
+  plan: L10n;
+  funding: L10n;
+  email: string | null;
+}
+// Se leen en cada página (ver content/leer.ts): en solis cambian sin recompilar
+const textos = () => leerGenerado<Textos>("textos");
+
 export const SITE = {
   acronym: "QUALITY",
   reference: "PID2024-156950NB-I00",
   year: 2026,
 
-  title: textos.title as L10n,
-  subtitle: textos.subtitle as L10n,
+  get title() {
+    return textos().title;
+  },
+  get subtitle() {
+    return textos().subtitle;
+  },
   /** Frase de presentación (portada) */
-  statement: textos.statement as L10n,
+  get statement() {
+    return textos().statement;
+  },
   /** Descripción breve (metadatos, pie) */
-  summary: textos.summary as L10n,
-  call: textos.call as L10n,
-  plan: textos.plan as L10n,
+  get summary() {
+    return textos().summary;
+  },
+  get call() {
+    return textos().call;
+  },
+  get plan() {
+    return textos().plan;
+  },
   /** Texto de financiación (pendiente de cotejar con la resolución) */
-  funding: textos.funding as L10n,
+  get funding() {
+    return textos().funding;
+  },
   /** Correo del proyecto (sin él no se muestra contacto) */
-  email: textos.email as string | null,
+  get email() {
+    return textos().email;
+  },
 };
 
 export function siteUrl(): string {

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { iniciales } from "@/content/equipo";
+import { iniciales } from "@/content/equipo-base";
 import { cn } from "@/lib/cn";
 
 const TONO = {
