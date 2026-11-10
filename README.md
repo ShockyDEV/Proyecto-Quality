@@ -71,8 +71,8 @@ Con `npm run dev`, `/backstage/` no toca GitHub: un simulador (`src/app/api/gith
 
 ## Cómo está montado
 
-- **Idiomas sin duplicar páginas**: todas viven en `src/app/(site)/[locale]/`. En desarrollo, `src/middleware.server.ts` reescribe `/ruta/` a `/es/ruta/`; en la versión estática, `scripts/build-static.mjs` saca el español a la raíz de `out/`. El conmutador ES/EN usa `<a>` nativo a propósito (con `<Link>`, el router de Next reutilizaba el árbol del otro idioma).
-- **Ficheros por modo**: `*.server.*` solo existen en desarrollo (middleware, 404 interna) y `*.static.*` solo en la exportación (la página que se copia a `404.html`). Ver `pageExtensions` en `next.config.ts`.
+- **Idiomas sin duplicar páginas**: todas viven en `src/app/(site)/[locale]/`. Con servidor (desarrollo y solis), `next.config.ts` reescribe `/ruta/` a `/es/ruta/` y la portada tiene su ruta en `src/app/(portada)/`; en la versión estática, `scripts/build-static.mjs` saca el español a la raíz de `out/`. El conmutador ES/EN usa `<a>` nativo a propósito (con `<Link>`, el router de Next reutilizaba el árbol del otro idioma).
+- **Ficheros por modo**: `*.server.*` solo existen con servidor (portada, 404 interna, rutas de API) y `*.static.*` solo en la exportación (la página que se copia a `404.html`). Ver `pageExtensions` en `next.config.ts`.
 - **Direcciones de la web anterior**: barra final en todas las rutas (`trailingSlash`), y `/proyectos-anteriores/` redirige a `/trayectoria/` con una página de *meta refresh* que genera `build-static.mjs`.
 - **Tokens**: `src/app/globals.css` define la paleta en variables (`--c-petroleo`, `--c-teja`…) y la redefine bajo `.dark`; `tailwind.config.ts` las expone como clases (`bg-petroleo`, `text-teja-texto`…). El verde azulado y la teja del logo no llegan al contraste AA para texto: para texto se usan sus variantes `-texto`.
 - **Tema**: un script en `<head>` aplica el modo oscuro antes de pintar (preferencia guardada o la del sistema); el botón de la cabecera lo cambia y lo recuerda en `localStorage`.

@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 /**
  * Sin base de datos: el contenido son archivos (contenido/). Tres usos con el
  * mismo código (ver src/lib/build-mode.ts):
- * - desarrollo (`npm run dev`): el middleware sirve el español sin prefijo;
+ * - desarrollo (`npm run dev`): el español sin prefijo (rewrites de abajo);
  * - estático (STATIC_EXPORT=1, `npm run build:static`): genera out/ (GitHub Pages);
  * - servidor (`next build` + `next start`, en solis): cada página se pinta con
  *   el contenido del momento, así que los guardados del backstage salen al
@@ -23,8 +23,8 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   basePath: BASE_PATH,
   env: { NEXT_PUBLIC_BASE_PATH: BASE_PATH },
-  // Los ficheros *.server.* (middleware de idiomas, 404 del modo desarrollo)
-  // solo cuentan en desarrollo y los *.static.* (404.html) solo en el estático.
+  // Los ficheros *.server.* (portada, 404 y API del servidor) solo cuentan con
+  // servidor y los *.static.* (404.html) solo en el estático.
   pageExtensions: STATIC_EXPORT
     ? ["static.tsx", "static.ts", "tsx", "ts", "jsx", "js"]
     : ["server.tsx", "server.ts", "tsx", "ts", "jsx", "js"],
@@ -32,6 +32,27 @@ const nextConfig: NextConfig = {
   // exportación no: Next tomaría esa carpeta como destino en lugar de out/.
   distDir: STATIC_EXPORT ? ".next" : process.env.NEXT_DIST_DIR || ".next",
   poweredByHeader: false,
+  // Idiomas en el servidor (desarrollo y solis): el español sin prefijo se sirve
+  // desde /es/… y /es/… redirige a la dirección sin prefijo. La portada tiene su
+  // propia ruta (app/(portada)). En la exportación lo hace build-static.mjs.
+  // (Antes era un middleware: detrás de Apache, en solis, sus reescrituras
+  // salían con otro host y protocolo, y Next las trataba como externas.)
+  ...(STATIC_EXPORT
+    ? {}
+    : {
+        redirects: async () => [
+          { source: "/es", destination: "/", permanent: true },
+          { source: "/es/:ruta*", destination: "/:ruta*", permanent: true },
+        ],
+        // afterFiles: después de los archivos de public/ y las rutas fijas
+        // (backstage, api…), y antes de la ruta dinámica [locale], que
+        // atiende directamente /en/…
+        rewrites: async () => ({
+          beforeFiles: [],
+          afterFiles: [{ source: "/:ruta((?!en(?:/|$)|es(?:/|$)).+)", destination: "/es/:ruta" }],
+          fallback: [],
+        }),
+      }),
   // Sin servidor no hay optimizador de imágenes: se sirven tal cual (los
   // ficheros de public/ ya están a su tamaño), con la subcarpeta delante.
   // (también en el servidor de solis, que no las optimiza: ya van a su tamaño)

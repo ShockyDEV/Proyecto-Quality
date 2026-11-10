@@ -4,6 +4,9 @@
 # Next.js
 /.next/
 /.next-build/
+# compilaciones del servidor de solis (scripts/solis-servidor.sh)
+/.next-servidor/
+/.next-nuevo/
 /out/
 next-env.d.ts
 *.tsbuildinfo

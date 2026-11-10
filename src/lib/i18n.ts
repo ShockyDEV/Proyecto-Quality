@@ -2,7 +2,7 @@
  * Idiomas del sitio: español (por defecto, sin prefijo en la URL) e inglés
  * (bajo /en), por los socios de Irlanda y Portugal.
  *
- * En desarrollo el middleware reescribe /ruta → /es/ruta; en la versión
+ * En el servidor (desarrollo y solis), next.config.ts reescribe /ruta → /es/ruta; en la versión
  * estática, scripts/build-static.mjs saca el español a la raíz. Así todas las
  * páginas viven una sola vez en `app/(site)/[locale]/…`.
  */
