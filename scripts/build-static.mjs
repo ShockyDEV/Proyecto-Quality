@@ -63,7 +63,9 @@ const contenido = spawnSync(process.execPath, [path.join(process.cwd(), "scripts
 if (contenido.status !== 0) process.exit(contenido.status ?? 1);
 rmSync(OUT, { recursive: true, force: true });
 const nextBin = createRequire(import.meta.url).resolve("next/dist/bin/next");
-const build = spawnSync(process.execPath, [nextBin, "build"], {
+// BUILD_TURBOPACK=1 compila con Turbopack (algo más rápido; lo usa solis,
+// donde cada guardado del backstage es una compilación)
+const build = spawnSync(process.execPath, [nextBin, "build", ...(process.env.BUILD_TURBOPACK === "1" ? ["--turbopack"] : [])], {
   stdio: "inherit",
   // Sin NEXT_DIST_DIR: en la exportación Next lo usaría como destino (ver next.config.ts)
   env: { ...process.env, STATIC_EXPORT: "1", NEXT_DIST_DIR: "" },

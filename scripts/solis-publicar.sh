@@ -2,9 +2,10 @@
 # Publicación de la web en solis (además de GitHub Pages).
 #
 # La lanza cada minuto el cron de oper (`crontab -l`); dentro del minuto mira
-# GitHub cuatro veces (cada ~15 s). Si main tiene un commit nuevo (un guardado
-# del backstage, un push…), compila la versión estática aquí mismo y la cambia
-# de golpe: así un cambio sale en unos 20-35 s, sin esperar a GitHub Actions.
+# GitHub cada ~5 s. Si main tiene un commit nuevo (un guardado del backstage,
+# un push…), compila la versión estática aquí mismo (con Turbopack) y la
+# cambia de golpe: así un cambio sale en unos 35-40 s, sin esperar a GitHub
+# Actions.
 #
 #   ~/apps/quality-web          clon del repositorio (solo para compilar)
 #   ~/.local/node               Node, instalado sin sudo
@@ -43,7 +44,7 @@ publicar() {
     npm ci --no-audit --no-fund >> "$LOG" 2>&1 || { log "npm ci falló"; return 1; }
   fi
   log "compilando $sha"
-  if PAGES_BASE_PATH="$BASE" NEXT_PUBLIC_SITE_URL="$URL" NEXT_PUBLIC_PUBLICACION=solis \
+  if PAGES_BASE_PATH="$BASE" NEXT_PUBLIC_SITE_URL="$URL" NEXT_PUBLIC_PUBLICACION=solis BUILD_TURBOPACK=1 \
     npm run -s build:static > /tmp/quality-build.log 2>&1; then
     rel="$DESTINO/versiones/$sha"
     rm -rf "$rel" && cp -r out "$rel"
@@ -65,12 +66,14 @@ publicar() {
 
 cd "$REPO" || exit 1
 mkdir -p "$DESTINO/versiones"
-for i in 1 2 3 4; do
+for i in $(seq 1 12); do
   if git fetch -q origin main 2>> "$LOG"; then
     if [ ! -e "$DESTINO/actual" ] || [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
       publicar
     fi
   fi
-  [ "$i" -lt 4 ] && sleep 14
+  # Sin pasarse del minuto: el cron lanza la siguiente vuelta
+  [ "$SECONDS" -lt 52 ] || break
+  sleep 4
 done
 exit 0
