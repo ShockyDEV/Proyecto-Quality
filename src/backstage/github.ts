@@ -6,6 +6,8 @@
  * (src/app/api/github-prueba/…) que lee y escribe en la copia local del
  * repositorio: así se puede probar todo sin tocar GitHub.
  */
+import { withBase } from "@/lib/base-path";
+
 export const REPO = { owner: "ShockyDEV", name: "Proyecto-Quality", branch: "main" };
 
 export const MODO_LOCAL = process.env.NODE_ENV === "development";
@@ -111,8 +113,31 @@ export async function borrar(token: string, path: string, sha: string, mensaje: 
 
 export type EstadoPublicacion = "esperando" | "en-curso" | "publicado" | "fallo";
 
-/** Estado del flujo que publica la web para un commit. */
+/**
+ * En solis, la web la publica scripts/solis-publicar.sh: cada versión
+ * publicada lleva version.json con los commits que incluye, y si una
+ * compilación falla deja fallo.json.
+ */
+export const EN_SOLIS = process.env.NEXT_PUBLIC_PUBLICACION === "solis";
+
+async function incluye(archivo: string, commit: string): Promise<boolean> {
+  try {
+    const res = await fetch(withBase(`/${archivo}`), { cache: "no-store" });
+    if (!res.ok) return false;
+    const { incluye = [] } = (await res.json()) as { incluye?: string[] };
+    return incluye.includes(commit);
+  } catch {
+    return false;
+  }
+}
+
+/** Estado de la publicación de la web para un commit. */
 export async function estadoPublicacion(token: string, commit: string): Promise<EstadoPublicacion> {
+  if (EN_SOLIS && !MODO_LOCAL) {
+    if (await incluye("version.json", commit)) return "publicado";
+    if (await incluye("fallo.json", commit)) return "fallo";
+    return "en-curso";
+  }
   const r = await pedir<{ workflow_runs: { name: string; status: string; conclusion: string | null }[] }>(
     token,
     `${BASE_REPO}/actions/runs?head_sha=${commit}&per_page=10`,
