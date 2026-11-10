@@ -49,7 +49,7 @@ const nextConfig: NextConfig = {
         // atiende directamente /en/…
         rewrites: async () => ({
           beforeFiles: [],
-          afterFiles: [{ source: "/:ruta((?!en(?:/|$)|es(?:/|$)).+)", destination: "/es/:ruta" }],
+          afterFiles: [{ source: "/:ruta((?!en(?:/|$)|es(?:/|$)|api/).+)", destination: "/es/:ruta" }],
           fallback: [],
         }),
       }),
