@@ -2,7 +2,7 @@
 
 Web del proyecto de investigación **QUALITY** (PID2024-156950NB-I00): *Evaluación de la calidad de los entornos de aprendizaje centrados en el estudiante en Universidad. Transferencia hacia la formación docente y la orientación académica.* Sustituye a la web en WordPress de quality.grial.eu.
 
-Es una web **estática**, sin base de datos: parte del sistema de la web de ieTIC 2027 (Next.js exportado a HTML y publicado en GitHub Pages) con la estética de la web del IUCE y la paleta del logo de QUALITY. Noticias, publicaciones, equipo y textos se editan desde el **backstage** de la propia web (`/backstage/`), que guarda cada cambio en este repositorio.
+Sin base de datos: el contenido son archivos del repositorio. Parte del sistema de la web de ieTIC 2027 (Next.js) con la estética de la web del IUCE y la paleta del logo de QUALITY. Se publica en **solis** (https://solis.usal.es/quality/), con Next como servidor. Noticias, publicaciones, equipo y textos se editan desde el **backstage** de la propia web (`/backstage/`), que guarda cada cambio en este repositorio.
 
 | | |
 |---|---|
@@ -10,7 +10,7 @@ Es una web **estática**, sin base de datos: parte del sistema de la web de ieTI
 | Estilos | Tailwind CSS 3 con tokens en variables CSS (modo claro y oscuro) |
 | Tipografías | Manrope (titulares) e Inter (texto), autoalojadas con `next/font` |
 | Idiomas | Español sin prefijo (`/equipo/`) e inglés en `/en/` |
-| Publicación | GitHub Pages, con `.github/workflows/pages.yml` |
+| Publicación | solis: Next en 127.0.0.1:3041 detrás de Apache (`scripts/solis-servidor.sh`) |
 | Edición | Backstage en `/backstage/` (`src/backstage/`), sobre la carpeta `contenido/` |
 
 ## Puesta en marcha
@@ -19,7 +19,7 @@ Es una web **estática**, sin base de datos: parte del sistema de la web de ieTI
 npm install
 npm run dev               # http://localhost:3030
 npm run build:static      # genera out/ (lo que se publica)
-npm run preview:static    # sirve out/ en http://localhost:3031 como GitHub Pages
+npm run preview:static    # sirve out/ en http://localhost:3031
 ```
 
 Comprobaciones: `npm run typecheck`, `npx eslint src --ext .ts,.tsx` y `npm test` (las ejecuta también la CI).
@@ -77,11 +77,17 @@ Con `npm run dev`, `/backstage/` no toca GitHub: un simulador (`src/app/api/gith
 - **Tokens**: `src/app/globals.css` define la paleta en variables (`--c-petroleo`, `--c-teja`…) y la redefine bajo `.dark`; `tailwind.config.ts` las expone como clases (`bg-petroleo`, `text-teja-texto`…). El verde azulado y la teja del logo no llegan al contraste AA para texto: para texto se usan sus variantes `-texto`.
 - **Tema**: un script en `<head>` aplica el modo oscuro antes de pintar (preferencia guardada o la del sistema); el botón de la cabecera lo cambia y lo recuerda en `localStorage`.
 
-## Publicación en GitHub Pages
+## Publicación en solis
 
-1. Crear el repositorio y, en *Settings → Pages*, elegir *GitHub Actions* como origen.
-2. Cada push a `main` compila y publica. Sin dominio propio, la web queda en `https://<usuario>.github.io/<repo>/` (el flujo añade la subcarpeta a enlaces e imágenes).
-3. Para `quality.grial.eu`: quien gestione el DNS de grial.eu crea el registro `quality CNAME <usuario>.github.io` y se pone el dominio en *Settings → Pages → Custom domain*.
+La web la sirve Next (`next start`) en solis, detrás de Apache, en https://solis.usal.es/quality/ hasta que tenga dominio propio. Lo mantiene el cron de `oper` con `scripts/solis-servidor.sh`:
+
+- Arranca el servidor si no está en marcha y, cada ~5 s, trae de GitHub lo último (`scripts/solis-actualizar.sh`). Si solo cambia contenido, regenera los datos y sale al instante (cada página lee el contenido al pintarse, `src/content/leer.ts`); si cambia código, recompila y reinicia (~1 min).
+- El backstage no espera: al guardar llama a `/quality/api/actualizar/`, que hace lo mismo en el momento. Un guardado tarda unos 4-5 s en estar publicado.
+- Apache (vhost `solis-pruebas.conf`): `ProxyPass /quality` → 127.0.0.1:3041 y `Alias /quality/media` → `public/media` del clon. Registro: `~/quality-servidor.log`.
+
+Con dominio propio, se compila sin subcarpeta (`QUALITY_BASE`/`PAGES_BASE_PATH` vacíos en `solis-servidor.sh`) y se crea su vhost.
+
+`npm run build:static` sigue generando la versión estática (`out/`), que la CI compila para comprobar que no se rompe; ya no se publica en GitHub Pages.
 
 ## Pendiente de las investigadoras principales
 
