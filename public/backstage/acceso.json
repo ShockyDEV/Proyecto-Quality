@@ -1,3 +1,8 @@
 {
-  "usuarios": []
+  "usuarios": [
+    {
+      "nombre": "cesar",
+      "token": "QBX1:wreVCdhiRRcXS-AxbL3zMi-mm3DZ928ixunVOagqpU61crJstt7ULc3TmW9nitCeHtUNhUpK5M1BrJ-A2SnzFiMDncdftZZOrKVLSPg_kxJDLQAZGQQQxmTjeNJxkzZSONi5iWq8Pc8CA1xDIp0QcPrCBz_ikDKWfV7rPKPFZvzjzoCwNExekCM"
+    }
+  ]
 }
