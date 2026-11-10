@@ -13,6 +13,7 @@ import {
   Scale,
   School,
   Share2,
+  Target,
   Users,
 } from "lucide-react";
 import { EjesEsquema } from "@/components/home/ejes-esquema";
@@ -20,6 +21,7 @@ import { HexMark } from "@/components/ui/hex-mark";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { DESCRIPCION, EJES, EJE_COLOR, OBJETIVOS, type EjeId } from "@/content/proyecto";
 import { cifrasEquipo, EQUIPO, INSTITUCIONES, PAISES, type PaisId } from "@/content/equipo";
+import { fechaLarga, NOTICIAS } from "@/content/noticias";
 import { SITE } from "@/content/site";
 import { href, pick, type Locale } from "@/lib/i18n";
 import { localeFrom, pageMetadata } from "@/lib/metadata";
@@ -57,6 +59,9 @@ const T = {
     en: "Universities and quality agencies from Spain, Ireland and Portugal make up the project team.",
   },
   meetTeam: { es: "Conoce al equipo", en: "Meet the team" },
+  noticiasEyebrow: { es: "Noticias", en: "News" },
+  noticiasTitle: { es: "Lo último del proyecto", en: "Latest from the project" },
+  noticiasAll: { es: "Todas las noticias", en: "All news" },
 } as const;
 
 /** Textos con cifras */
@@ -81,7 +86,8 @@ const EJE_TONO = {
   petroleo: { bar: "bg-petroleo", tile: "bg-petroleo/15 text-petroleo" },
   teja: { bar: "bg-teja", tile: "bg-teja/15 text-teja-texto" },
 } as const;
-const OBJETIVO_ICON: Record<string, typeof School> = { conocimiento: Lightbulb, sistema: Landmark, equidad: Scale };
+/** Iconos de los objetivos, por orden (se editan desde el panel y pueden ser más de tres) */
+const OBJETIVO_ICON = [Lightbulb, Landmark, Scale, Target];
 
 export default async function Home({ params }: Props) {
   const locale = await localeFrom(params);
@@ -202,9 +208,9 @@ export default async function Home({ params }: Props) {
           <SectionHeading id="objetivos" eyebrow={t("objetivosEyebrow")} title={t("objetivosTitle")} />
           <ul className="mt-8 grid gap-5 md:grid-cols-3">
             {OBJETIVOS.map((o, i) => {
-              const Icon = OBJETIVO_ICON[o.id];
+              const Icon = OBJETIVO_ICON[i % OBJETIVO_ICON.length];
               return (
-                <li key={o.id} data-reveal style={{ ["--d" as string]: `${i * 90}ms` }} className="flex gap-4 rounded-lg bg-superficie p-6 shadow-tarjeta">
+                <li key={i} data-reveal style={{ ["--d" as string]: `${i * 90}ms` }} className="flex gap-4 rounded-lg bg-superficie p-6 shadow-tarjeta">
                   <Icon className="mt-0.5 h-6 w-6 shrink-0 text-teja" aria-hidden />
                   <p className="font-display text-lg font-bold leading-snug text-tinta">{pick(o.text, locale)}</p>
                 </li>
@@ -213,6 +219,34 @@ export default async function Home({ params }: Props) {
           </ul>
         </div>
       </section>
+
+      {/* Últimas noticias (solo si hay) */}
+      {NOTICIAS.length > 0 && (
+        <section aria-labelledby="noticias" className="bg-superficie py-14 sm:py-16">
+          <div className="contenedor">
+            <SectionHeading id="noticias" eyebrow={t("noticiasEyebrow")} title={t("noticiasTitle")} />
+            <ul className="mt-8 grid gap-5 md:grid-cols-3">
+              {NOTICIAS.slice(0, 3).map((n, i) => (
+                <li key={n.slug} data-reveal style={{ ["--d" as string]: `${i * 90}ms` }} className="tarjeta flex flex-col p-6">
+                  <p className="text-sm text-tenue">
+                    <time dateTime={n.date}>{fechaLarga(n.date, locale)}</time>
+                  </p>
+                  <h3 className="mt-1.5 text-lg font-bold leading-snug">
+                    <Link href={href(locale, `/noticias/${n.slug}`)} className="hover:text-petroleo">
+                      {pick(n.title, locale)}
+                    </Link>
+                  </h3>
+                  <p className="mt-2 text-[0.95rem] leading-relaxed text-cuerpo">{pick(n.summary, locale)}</p>
+                </li>
+              ))}
+            </ul>
+            <Link href={href(locale, "/noticias")} className="enlace mt-8 inline-flex items-center gap-1.5 text-sm">
+              {t("noticiasAll")}
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* Red de instituciones */}
       <section aria-labelledby="red" className="bg-superficie py-14 sm:py-16">

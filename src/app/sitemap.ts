@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { NOTICIAS } from "@/content/noticias";
 import { siteUrl } from "@/content/site";
 import { NAV } from "@/content/ui";
 import { href, LOCALES } from "@/lib/i18n";
@@ -6,8 +7,9 @@ import { href, LOCALES } from "@/lib/i18n";
 // Se genera al compilar (también en la versión estática).
 export const dynamic = "force-static";
 
-// Portada + menú (Publicaciones solo entra cuando hay alguna, como en el menú)
-const PATHS = ["/", ...NAV.map((n) => n.path)];
+// Portada + menú (Publicaciones y Noticias solo entran cuando hay alguna, como
+// en el menú) + cada noticia
+const PATHS = ["/", ...NAV.map((n) => n.path), ...NOTICIAS.map((n) => `/noticias/${n.slug}`)];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteUrl();

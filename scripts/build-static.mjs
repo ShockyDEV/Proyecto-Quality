@@ -1,8 +1,8 @@
 /**
  * Versión estática de la web para GitHub Pages (`npm run build:static`).
  *
- *   1. `next build` con STATIC_EXPORT=1 (sin base de datos: todo el
- *      contenido está en src/content/).
+ *   1. `next build` con STATIC_EXPORT=1, después de generar el contenido
+ *      editable (scripts/contenido.mjs; sin base de datos).
  *   2. Reordena out/ para que GitHub Pages sirva las mismas direcciones que el
  *      modo desarrollo: el español sin prefijo (/equipo/) y el inglés en /en/.
  *   3. 404.html, la redirección de /proyectos-anteriores/ (dirección de la web
@@ -26,7 +26,41 @@ function fail(msg) {
   process.exit(1);
 }
 
+/**
+ * Reduce las fotos de más de 400 KB a un máximo de 1600 px (480 px las del
+ * equipo, que se ven en un hexágono pequeño). Usa sharp, que llega con Next;
+ * si no está, deja las imágenes como están.
+ */
+async function optimizarMedia(dir) {
+  if (!existsSync(dir)) return;
+  let sharp;
+  try {
+    sharp = (await import("sharp")).default;
+  } catch {
+    console.warn("· sharp no está instalado: las imágenes de /media/ se publican sin reducir");
+    return;
+  }
+  const walk = (d) =>
+    readdirSync(d).flatMap((n) => {
+      const p = path.join(d, n);
+      return statSync(p).isDirectory() ? walk(p) : [p];
+    });
+  for (const file of walk(dir)) {
+    if (!/\.(jpe?g|png|webp)$/i.test(file) || statSync(file).size <= 400 * 1024) continue;
+    const max = rel(file).startsWith("media/equipo/") ? 480 : 1600;
+    const img = sharp(readFileSync(file)).rotate().resize({ width: max, height: max, fit: "inside", withoutEnlargement: true });
+    const ext = path.extname(file).toLowerCase();
+    const buf = await (ext === ".png" ? img.png({ compressionLevel: 9 }) : ext === ".webp" ? img.webp({ quality: 82 }) : img.jpeg({ quality: 82, mozjpeg: true })).toBuffer();
+    writeFileSync(file, buf);
+    console.log(`· ${rel(file)} reducida a ${Math.round(buf.length / 1024)} KB`);
+  }
+}
+
 // ─── 1. Compilación ─────────────────────────────────────────────────────
+// Antes, el contenido editable (contenido/ → src/content/generado/): si tiene
+// errores, se para aquí y la versión publicada no cambia.
+const contenido = spawnSync(process.execPath, [path.join(process.cwd(), "scripts/contenido.mjs")], { stdio: "inherit" });
+if (contenido.status !== 0) process.exit(contenido.status ?? 1);
 rmSync(OUT, { recursive: true, force: true });
 const nextBin = createRequire(import.meta.url).resolve("next/dist/bin/next");
 const build = spawnSync(process.execPath, [nextBin, "build"], {
@@ -74,6 +108,16 @@ for (const dir of ["pagina-no-encontrada", "en/pagina-no-encontrada", "_not-foun
   rmSync(path.join(OUT, dir), { recursive: true, force: true });
 }
 
+// Sin noticias, la ruta /noticias/[slug] genera una página «_» de relleno
+// (ver su generateStaticParams): fuera.
+for (const dir of ["noticias/_", "en/noticias/_"]) {
+  rmSync(path.join(OUT, dir), { recursive: true, force: true });
+}
+
+// Imágenes subidas desde el panel (public/media/): las muy grandes se
+// reducen en la copia publicada (el original sigue en el repositorio).
+await optimizarMedia(path.join(OUT, "media"));
+
 // La web anterior tenía /proyectos-anteriores/; ahora es /trayectoria/.
 // GitHub Pages no hace redirecciones de servidor: una página mínima con
 // meta refresh y canonical (los buscadores lo tratan como redirección).
@@ -112,6 +156,7 @@ const required = [
   "equipo/index.html",
   "trayectoria/index.html",
   "publicaciones/index.html",
+  "noticias/index.html",
   "en/index.html",
   "en/equipo/index.html",
   "proyectos-anteriores/index.html",

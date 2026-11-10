@@ -1,12 +1,14 @@
 import type { L10n } from "@/lib/i18n";
+import publicaciones from "@/content/generado/publicaciones.json";
 
 /**
- * Publicaciones del proyecto. Mientras la lista esté vacía, «Publicaciones»
- * no sale en el menú ni en el sitemap y su página explica dónde consultar la
- * producción del equipo (la web anterior solo decía «Estamos trabajando.»).
+ * Publicaciones del proyecto: un archivo por publicación en
+ * contenido/publicaciones/, editable desde el panel (ver scripts/contenido.mjs).
+ * Mientras no haya ninguna, «Publicaciones» no sale en el menú ni en el
+ * sitemap y su página explica dónde consultar la producción del equipo.
  *
- * Para añadir una, basta con una entrada más; se agrupan por año y tipo, y
- * dentro de cada grupo salen en el orden de la lista.
+ * La página las agrupa por año y tipo; dentro de cada grupo van por el campo
+ * «Orden» del panel (los menores antes) y, a igualdad, por título.
  */
 export type TipoPublicacion = "articulo" | "capitulo" | "libro" | "congreso" | "informe";
 
@@ -40,56 +42,4 @@ export interface Publicacion {
   openAccess?: string;
 }
 
-/**
- * Actas de ICED26 (Salamanca, junio de 2026), publicadas en la web del
- * programa el 21-10-2026. Las páginas del PDF coinciden con las impresas.
- */
-const ICED26 = {
-  venue: "Cultivating agency in higher education: Proceedings of the ICED26 International Conference on Academic Development",
-  editors:
-    "M. Feixas, M.-J. Rodríguez-Conde, S. Olmos-Migueláñez, M.-A. Pérez-Pascual, M.-J. Canet-Subiela, M.-Á. Carabal-Montagud, A. Madinabeitia-Ezkurra, I. Fernández-Fernández, A. Gamazo, E. González-Gutiérrez, & M. García-Herrero",
-  isbn: "978-84-09-89990-6",
-};
-const actasIced26 = (page: number) => `https://programme.iced26.es/assets/ICED26-Proceedings.pdf#page=${page}`;
-
-/**
- * Las tres primeras, enviadas por Susana Olmos el 23-10-2026; la de TEEM, por
- * César Conley el 26-10-2026 (autoría según el programa del Track 16).
- */
-export const PUBLICACIONES: Publicacion[] = [
-  {
-    year: 2026,
-    type: "congreso",
-    authors:
-      "Rodríguez-Conde, M.-J., Olmos-Migueláñez, S., Hernández-Ramos, J.-P., Ortiz-López, A., García-Herrero, M., & Marcos-Ortega, S.",
-    title: "Student-centred learning as a quality framework in higher education: Empowering learners and transforming curriculum",
-    ...ICED26,
-    pages: "101–103",
-    proceedings: actasIced26(101),
-  },
-  {
-    year: 2026,
-    type: "congreso",
-    authors: "Rodríguez-Conde, M.-J., Rivetta, S., & Olmos-Migueláñez, S.",
-    title: "Professionalising university teaching in the European Higher Education Area: A mixed-methods European research",
-    ...ICED26,
-    pages: "296–298",
-    proceedings: actasIced26(296),
-  },
-  {
-    year: 2026,
-    type: "congreso",
-    authors: "García-Herrero, M., Ortiz-López, A., Olmos-Migueláñez, S., Rodríguez-Conde, M.-J., & Rodríguez Lozano, C.",
-    title: "Knowing and Acting on Student-Centered Learning: Evidence-Informed Quality Enhancement through Indicators of Student Agency",
-    venue: "ECER 2026, European Conference on Educational Research",
-    place: { es: "Tampere (Finlandia)", en: "Tampere (Finland)" },
-  },
-  {
-    year: 2026,
-    type: "congreso",
-    authors: "Conley-Torres, C., Rodríguez-Conde, M.-J., & Olmos-Migueláñez, S.",
-    title: "Quality Assessment of University Student-Centered Learning Environments (SCL)",
-    venue: "TEEM 2026, International Conference on Technological Ecosystems for Enhancing Multiculturality (Doctoral Consortium)",
-    place: { es: "Oporto (Portugal)", en: "Porto (Portugal)" },
-  },
-];
+export const PUBLICACIONES = publicaciones as Publicacion[];

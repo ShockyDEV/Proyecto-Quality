@@ -1,20 +1,20 @@
 import type { L10n } from "@/lib/i18n";
+import instituciones from "@/content/instituciones.json";
+import equipo from "@/content/generado/equipo.json";
 
 /**
- * Equipo del proyecto, tal como lo publica la web anterior (página «Equipo»,
- * 16-10-2026): investigadoras principales, equipo investigador y equipo de
- * trabajo, por institución, con el enlace al perfil que allí figura. Errata
- * corregida: «Politécncio». Los nombres se dejan como estaban escritos.
+ * Equipo del proyecto. Cada persona es un archivo de contenido/equipo/ que se
+ * edita desde el panel (nombre, papel, institución, perfil, foto y orden); ver
+ * scripts/contenido.mjs. Las cifras de la web (personas, instituciones,
+ * países) se calculan a partir de esa lista.
  *
- * Las cifras de la web (personas, instituciones, países) se calculan a partir
- * de esta lista: basta con añadir o quitar a alguien aquí.
+ * Las instituciones no se editan desde el panel: para añadir una, se añade a
+ * src/content/instituciones.json y a la lista de .pages.yml.
  *
- * Fotos (public/equipo/, 240 px, 16-10-2026): de la ficha de cada persona en
- * el Portal de Investigación USAL; las de Ana María Pinto, José Carlos Sánchez
- * Prieto y Serena Rivetta, que no tienen foto en el portal, de la web del
- * IUCE; las de Ignacio González y Eloísa Reche, de su perfil de Google Scholar;
- * la de Amparo Jiménez, de Knowledge Society. El resto no tiene foto pública
- * en el perfil enlazado y se muestra con sus iniciales.
+ * Fotos (public/media/equipo/, 240 px): de la ficha de cada persona en el
+ * Portal de Investigación USAL, de la web del IUCE, de Google Scholar o de
+ * Knowledge Society, o enviadas por la propia persona. Sin foto, se muestran
+ * las iniciales.
  */
 
 export type PaisId = "es" | "ie" | "pt";
@@ -33,67 +33,7 @@ export interface Institucion {
   url: string;
 }
 
-export const INSTITUCIONES: Institucion[] = [
-  {
-    id: "usal",
-    name: { es: "Universidad de Salamanca", en: "University of Salamanca" },
-    short: "USAL",
-    country: "es",
-    url: "https://www.usal.es",
-  },
-  {
-    id: "uco",
-    name: { es: "Universidad de Córdoba", en: "University of Córdoba" },
-    short: "UCO",
-    country: "es",
-    url: "https://www.uco.es",
-  },
-  {
-    id: "ule",
-    name: { es: "Universidad de León", en: "University of León" },
-    short: "ULE",
-    country: "es",
-    url: "https://www.unileon.es",
-  },
-  {
-    id: "upsa",
-    name: { es: "Universidad Pontificia de Salamanca", en: "Pontifical University of Salamanca" },
-    short: "UPSA",
-    country: "es",
-    url: "https://www.upsa.es",
-  },
-  {
-    id: "unibasq",
-    name: {
-      es: "Agencia de Calidad del Sistema Universitario Vasco (Unibasq)",
-      en: "Basque University System Quality Agency (Unibasq)",
-    },
-    short: "Unibasq",
-    country: "es",
-    url: "https://www.unibasq.eus",
-  },
-  {
-    id: "dcu",
-    name: { es: "Dublin City University", en: "Dublin City University" },
-    short: "DCU",
-    country: "ie",
-    url: "https://www.dcu.ie",
-  },
-  {
-    id: "ubi",
-    name: { es: "Universidade da Beira Interior", en: "University of Beira Interior" },
-    short: "UBI",
-    country: "pt",
-    url: "https://www.ubi.pt",
-  },
-  {
-    id: "ipv",
-    name: { es: "Instituto Politécnico de Viseu", en: "Polytechnic Institute of Viseu" },
-    short: "IPV",
-    country: "pt",
-    url: "https://www.ipv.pt",
-  },
-];
+export const INSTITUCIONES = instituciones as Institucion[];
 
 export type Rol = "ip" | "investigador" | "trabajo" | "contrato";
 
@@ -120,96 +60,13 @@ export interface Persona {
   name: string;
   role: Rol;
   institution: string;
-  /** Perfil público que enlaza la web anterior */
+  /** Perfil público (portal de investigación, ORCID, Google Scholar…) */
   profile?: string;
-  /** Foto (public/equipo/…) */
+  /** Foto (public/media/equipo/…) */
   photo?: string;
 }
 
-const portalUsal = (id: number) => `https://produccioncientifica.usal.es/investigadores/${id}/detalle`;
-const orcid = (id: string) => `https://orcid.org/${id}`;
-const foto = (slug: string) => `/equipo/${slug}.jpg`;
-
-export const EQUIPO: Persona[] = [
-  // Investigadoras principales
-  { name: "Mª José Rodríguez Conde", role: "ip", institution: "usal", profile: portalUsal(56749), photo: foto("rodriguez-conde") },
-  { name: "Susana Olmos Miguelañez", role: "ip", institution: "usal", profile: portalUsal(57518), photo: foto("olmos-miguelanez") },
-
-  // Equipo investigador
-  { name: "Ana Belén González Rogado", role: "investigador", institution: "usal", profile: portalUsal(56131), photo: foto("gonzalez-rogado") },
-  { name: "Juan Pablo Hernández Ramos", role: "investigador", institution: "usal", profile: portalUsal(57150), photo: foto("hernandez-ramos") },
-  { name: "Susana Nieto Isidro", role: "investigador", institution: "usal", profile: portalUsal(55912), photo: foto("nieto-isidro") },
-  { name: "Ana María Pinto Llorente", role: "investigador", institution: "usal", profile: portalUsal(57371), photo: foto("pinto-llorente") },
-  { name: "José Carlos Sánchez Prieto", role: "investigador", institution: "usal", profile: portalUsal(57383), photo: foto("sanchez-prieto") },
-  {
-    name: "Ignacio González López",
-    role: "investigador",
-    institution: "uco",
-    profile: "https://scholar.google.com/citations?user=bYLYLswAAAAJ&hl=en",
-    photo: foto("gonzalez-lopez"),
-  },
-  {
-    name: "Eloisa Reche Urbano",
-    role: "investigador",
-    institution: "uco",
-    profile: "https://scholar.google.es/citations?user=I1fMRhEAAAAJ&hl=es",
-    photo: foto("reche-urbano"),
-  },
-  {
-    name: "Mercedes López Aguado",
-    role: "investigador",
-    institution: "ule",
-    profile: "https://portalcientifico.unileon.es/investigadores/97017/detalle",
-  },
-  {
-    name: "Amparo Jiménez Vivas",
-    role: "investigador",
-    institution: "upsa",
-    profile: "https://knowledgesociety.usal.es/users/amparo-jim%C3%A9nez-vivas",
-    photo: foto("jimenez-vivas"),
-  },
-  {
-    name: "María Teresa Del Moral Marcos",
-    role: "investigador",
-    institution: "upsa",
-    profile: "https://summa.upsa.es/details.vm?q=id:0000129719&lang=es&view=main",
-  },
-
-  // Equipo de trabajo
-  { name: "Alba María del Brio Nieto", role: "trabajo", institution: "usal", profile: portalUsal(1222816), photo: foto("del-brio-nieto") },
-  { name: "Cristina Frade Martínez", role: "trabajo", institution: "usal", profile: portalUsal(148037), photo: foto("frade-martinez") },
-  { name: "Marina García Herrero", role: "trabajo", institution: "usal", profile: portalUsal(820219), photo: foto("garcia-herrero") },
-  { name: "María Holgado Aguadero", role: "trabajo", institution: "usal", profile: portalUsal(818526), photo: foto("holgado-aguadero") },
-  { name: "Carolina Alexandra Martins Azinheiro", role: "trabajo", institution: "usal", profile: portalUsal(182560), photo: foto("martins-azinheiro") },
-  { name: "Alberto Ortiz López", role: "trabajo", institution: "usal", profile: portalUsal(157284), photo: foto("ortiz-lopez") },
-  { name: "Serena Rivetta", role: "trabajo", institution: "usal", profile: portalUsal(148049), photo: foto("rivetta") },
-  { name: "Lourdes Sancho Otero", role: "trabajo", institution: "uco", profile: orcid("0000-0002-9999-2593") },
-  {
-    name: "Sandra Marcos Ortega",
-    role: "trabajo",
-    institution: "upsa",
-    profile: "https://www.unibasq.eus/wp-content/uploads/2025/01/CV-SMO.pdf",
-  },
-  {
-    name: "Joe O’Hara",
-    role: "trabajo",
-    institution: "dcu",
-    profile: "https://www.dcu.ie/policy-and-practice/people/joe-ohara",
-  },
-  {
-    name: "Martin Brown",
-    role: "trabajo",
-    institution: "dcu",
-    profile: "https://www.dcu.ie/policyandpractice/people/martin-brown",
-  },
-  { name: "Maria Eugenia Neto Ferrao", role: "trabajo", institution: "ubi", profile: orcid("0000-0002-1317-0629") },
-  { name: "Maria Pacheco Figueiredo", role: "trabajo", institution: "ipv", profile: orcid("0000-0002-3604-529X") },
-  { name: "Eva Fernández de Labastida", role: "trabajo", institution: "unibasq", profile: orcid("0009-0008-0731-5597") },
-
-  // Contratos asociados al proyecto (no estaban en la web anterior; añadido el 22-10-2026).
-  // Su sección va entre el equipo investigador y el equipo de trabajo.
-  { name: "César Conley Torres", role: "contrato", institution: "usal", profile: portalUsal(2492580), photo: foto("conley-torres") },
-];
+export const EQUIPO = equipo as Persona[];
 
 export function institucion(id: string): Institucion {
   const found = INSTITUCIONES.find((i) => i.id === id);

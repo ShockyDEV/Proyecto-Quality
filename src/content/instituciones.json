@@ -1,0 +1,82 @@
+[
+  {
+    "id": "usal",
+    "name": {
+      "es": "Universidad de Salamanca",
+      "en": "University of Salamanca"
+    },
+    "short": "USAL",
+    "country": "es",
+    "url": "https://www.usal.es"
+  },
+  {
+    "id": "uco",
+    "name": {
+      "es": "Universidad de Córdoba",
+      "en": "University of Córdoba"
+    },
+    "short": "UCO",
+    "country": "es",
+    "url": "https://www.uco.es"
+  },
+  {
+    "id": "ule",
+    "name": {
+      "es": "Universidad de León",
+      "en": "University of León"
+    },
+    "short": "ULE",
+    "country": "es",
+    "url": "https://www.unileon.es"
+  },
+  {
+    "id": "upsa",
+    "name": {
+      "es": "Universidad Pontificia de Salamanca",
+      "en": "Pontifical University of Salamanca"
+    },
+    "short": "UPSA",
+    "country": "es",
+    "url": "https://www.upsa.es"
+  },
+  {
+    "id": "unibasq",
+    "name": {
+      "es": "Agencia de Calidad del Sistema Universitario Vasco (Unibasq)",
+      "en": "Basque University System Quality Agency (Unibasq)"
+    },
+    "short": "Unibasq",
+    "country": "es",
+    "url": "https://www.unibasq.eus"
+  },
+  {
+    "id": "dcu",
+    "name": {
+      "es": "Dublin City University",
+      "en": "Dublin City University"
+    },
+    "short": "DCU",
+    "country": "ie",
+    "url": "https://www.dcu.ie"
+  },
+  {
+    "id": "ubi",
+    "name": {
+      "es": "Universidade da Beira Interior",
+      "en": "University of Beira Interior"
+    },
+    "short": "UBI",
+    "country": "pt",
+    "url": "https://www.ubi.pt"
+  },
+  {
+    "id": "ipv",
+    "name": {
+      "es": "Instituto Politécnico de Viseu",
+      "en": "Polytechnic Institute of Viseu"
+    },
+    "short": "IPV",
+    "country": "pt",
+    "url": "https://www.ipv.pt"
+  }
+]

@@ -149,6 +149,53 @@
     @apply font-semibold text-tinta;
   }
 
+  /* Cuerpo de las noticias: HTML que sale del Markdown del panel */
+  .texto-noticia {
+    @apply text-[1.0625rem] leading-relaxed text-cuerpo;
+  }
+  .texto-noticia > * + * {
+    @apply mt-4;
+  }
+  .texto-noticia :is(h1, h2, h3, h4) {
+    @apply mt-9 font-display font-bold leading-snug text-tinta;
+  }
+  .texto-noticia :is(h1, h2) {
+    @apply text-2xl;
+  }
+  .texto-noticia :is(h3, h4) {
+    @apply text-xl;
+  }
+  .texto-noticia a {
+    @apply font-medium text-petroleo underline decoration-petroleo/30 decoration-1 underline-offset-4 hover:decoration-petroleo;
+  }
+  .texto-noticia strong {
+    @apply font-semibold text-tinta;
+  }
+  .texto-noticia :is(ul, ol) {
+    @apply space-y-1.5 pl-6;
+  }
+  .texto-noticia ul {
+    @apply list-disc;
+  }
+  .texto-noticia ol {
+    @apply list-decimal;
+  }
+  .texto-noticia li::marker {
+    @apply text-teja;
+  }
+  .texto-noticia blockquote {
+    @apply border-l-4 border-verde pl-5 italic;
+  }
+  .texto-noticia img {
+    @apply my-8 h-auto max-w-full rounded-lg border border-linea;
+  }
+  .texto-noticia table {
+    @apply w-full border-collapse text-sm;
+  }
+  .texto-noticia :is(th, td) {
+    @apply border-b border-linea px-3 py-2 text-left;
+  }
+
   /* Hexágono con vértice arriba, como el del símbolo del logo
      (proporción ancho:alto ≈ 0,87 para que sea regular) */
   .hexagono {

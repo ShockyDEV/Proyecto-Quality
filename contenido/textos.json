@@ -1,0 +1,121 @@
+{
+  "titulo": {
+    "es": "Evaluación de la calidad de los entornos de aprendizaje centrados en el estudiante en Universidad",
+    "en": "Assessing the quality of student-centred learning environments in higher education"
+  },
+  "subtitulo": {
+    "es": "Transferencia hacia la formación docente y la orientación académica",
+    "en": "Transfer to teacher training and academic guidance"
+  },
+  "presentacion": {
+    "es": "Estudiamos la interacción entre estudiantes, profesorado y el entorno de aprendizaje para mejorar la calidad universitaria.",
+    "en": "We study the interaction between students, teaching staff and the learning environment to improve the quality of higher education."
+  },
+  "resumen": {
+    "es": "Proyecto de investigación que evalúa la calidad de los entornos de aprendizaje orientados al estudiante en educación superior y transfiere sus resultados a la formación docente y la orientación académica.",
+    "en": "Research project assessing the quality of student-centred learning environments in higher education and transferring its findings to teacher training and academic guidance."
+  },
+  "convocatoria": {
+    "es": "Proyectos de Generación de Conocimiento 2024",
+    "en": "Knowledge Generation Projects 2024"
+  },
+  "plan": {
+    "es": "Plan Estatal de Investigación Científica, Técnica y de Innovación 2021-2027",
+    "en": "State Plan for Scientific, Technical and Innovation Research 2021-2027"
+  },
+  "financiacion": {
+    "es": "Financiado por la Agencia Estatal de Investigación (AEI), convocatoria «Proyectos de Generación de Conocimiento 2024» (PID2024-156950NB-I00), Plan Estatal de Investigación Científica, Técnica y de Innovación 2021-2027. Cofinanciado por el Fondo Europeo de Desarrollo Regional (FEDER) y el Fondo Social Europeo Plus (FSE+).",
+    "en": "Funded by the Spanish State Research Agency (AEI), «Knowledge Generation Projects 2024» call (PID2024-156950NB-I00), State Plan for Scientific, Technical and Innovation Research 2021-2027. Co-funded by the European Regional Development Fund (ERDF) and the European Social Fund Plus (ESF+)."
+  },
+  "correo": "",
+  "ejes": {
+    "estudiantes": {
+      "titulo": {
+        "es": "Estudiantes",
+        "en": "Students"
+      },
+      "texto": {
+        "es": "Caracterización de los resultados de aprendizaje de estudiantes universitarios. Indicadores de inequidad y factores clave asociados.",
+        "en": "Characterising the learning outcomes of university students. Inequity indicators and the key factors associated with them."
+      }
+    },
+    "entorno": {
+      "titulo": {
+        "es": "Entorno de aprendizaje",
+        "en": "Learning environment"
+      },
+      "texto": {
+        "es": "Estudio de los entornos de aprendizaje orientados al estudiante en Universidad.",
+        "en": "Study of student-centred learning environments in higher education."
+      }
+    },
+    "profesorado": {
+      "titulo": {
+        "es": "Profesorado",
+        "en": "Teaching staff"
+      },
+      "texto": {
+        "es": "Transferencia en formación docente del profesorado universitario y hacia la orientación académica del estudiante universitario.",
+        "en": "Transfer to the professional development of university teaching staff and to the academic guidance of university students."
+      }
+    }
+  },
+  "objetivos": [
+    {
+      "texto": {
+        "es": "Crear conocimiento útil y aplicable",
+        "en": "Create useful, applicable knowledge"
+      }
+    },
+    {
+      "texto": {
+        "es": "Reforzar el sistema universitario: moderno, inclusivo y orientado al estudiante",
+        "en": "Strengthen the university system: modern, inclusive and student-centred"
+      }
+    },
+    {
+      "texto": {
+        "es": "Mejorar la calidad y la equidad en educación superior",
+        "en": "Improve quality and equity in higher education"
+      }
+    }
+  ],
+  "objeto": {
+    "es": "El proyecto QUALITY evalúa la calidad de los entornos de aprendizaje orientados al estudiante en educación superior.",
+    "en": "The QUALITY project assesses the quality of student-centred learning environments in higher education."
+  },
+  "enfoque": {
+    "cuantitativo": {
+      "titulo": {
+        "es": "Análisis cuantitativo",
+        "en": "Quantitative analysis"
+      },
+      "texto": {
+        "es": "Mediante análisis cuantitativo de datos SIIU con regresiones multinivel, identifica factores contextuales (centro, titulación, perfil del alumnado) que determinan el rendimiento académico y la equidad educativa, tanto socioeconómica como de género.",
+        "en": "Through quantitative analysis of SIIU data using multilevel regression, it identifies the contextual factors (institution, degree programme, student profile) that shape academic performance and educational equity, both socio-economic and gender equity."
+      },
+      "nota": {
+        "es": "SIIU: Sistema Integrado de Información Universitaria.",
+        "en": "SIIU: Spain's Integrated University Information System."
+      }
+    },
+    "cualitativo": {
+      "titulo": {
+        "es": "Estudios cualitativos",
+        "en": "Qualitative studies"
+      },
+      "texto": {
+        "es": "Complementa este enfoque con estudios cualitativos en centros de alta y baja eficacia para detectar buenas prácticas en enseñanza y evaluación.",
+        "en": "It complements this approach with qualitative studies in high- and low-effectiveness institutions to identify good practice in teaching and assessment."
+      }
+    }
+  },
+  "transferencia": {
+    "es": "Los resultados se aplicarán directamente a la formación docente y la orientación académica, impulsando prácticas de aprendizaje profundo e inclusión social.",
+    "en": "The findings will be applied directly to teacher training and academic guidance, promoting deep-learning practices and social inclusion."
+  },
+  "colaboracion": {
+    "es": "A través de la colaboración internacional con universidades de Irlanda y Portugal, en QUALITY se elaborará un catálogo de recomendaciones prácticas que permita a las instituciones universitarias optimizar sus procesos educativos hacia un sistema más equitativo y moderno.",
+    "en": "Through international collaboration with universities in Ireland and Portugal, QUALITY will produce a catalogue of practical recommendations to help universities optimise their educational processes towards a fairer, more modern system."
+  }
+}

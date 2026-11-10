@@ -1,0 +1,425 @@
+# Panel de edición de la web (Pages CMS, https://app.pagescms.org).
+#
+# Cada cambio guardado en el panel es un commit en main: GitHub Actions vuelve
+# a generar la web y la publica en uno o dos minutos. Antes, scripts/contenido.mjs
+# comprueba el contenido; si algo no cuadra, la web no se publica y sigue en
+# línea la versión anterior (el error aparece en la pestaña Actions).
+#
+# Las instituciones no se editan aquí: para añadir una, se añade a
+# src/content/instituciones.json y a la lista «institucion» de abajo.
+
+media:
+  input: public/media
+  output: /media
+  rename: safe
+  categories: [image, document]
+
+settings:
+  commit:
+    templates:
+      create: "Panel: añade {path}"
+      update: "Panel: edita {path}"
+      delete: "Panel: borra {path}"
+      rename: "Panel: renombra {oldPath} a {newPath}"
+
+components:
+  # Texto en los dos idiomas (párrafo)
+  bilingue:
+    type: object
+    fields:
+      - name: es
+        label: Español
+        type: text
+        required: true
+      - name: en
+        label: Inglés
+        type: text
+        description: Si se deja vacío, la web en inglés muestra el texto en español.
+  # Texto en los dos idiomas (una línea)
+  bilingueCorto:
+    type: object
+    fields:
+      - name: es
+        label: Español
+        type: string
+        required: true
+      - name: en
+        label: Inglés
+        type: string
+        description: Si se deja vacío, la web en inglés muestra el texto en español.
+
+content:
+  # ── Noticias ────────────────────────────────────────────────────────────
+  - name: noticias
+    label: Noticias
+    type: collection
+    path: contenido/noticias
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{fields.titulo}.md"
+    view:
+      fields: [titulo, fecha]
+      primary: titulo
+      sort: [fecha, titulo]
+      default:
+        sort: fecha
+        order: desc
+    fields:
+      - name: titulo
+        label: Título
+        type: string
+        required: true
+      - name: fecha
+        label: Fecha
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: resumen
+        label: Resumen
+        type: text
+        required: true
+        description: Una o dos frases. Sale en la lista de noticias y en la portada.
+      - name: imagen
+        label: Imagen (opcional)
+        type: image
+        description: Foto horizontal. Las muy grandes se reducen al publicar.
+        options:
+          path: public/media/noticias
+          categories: [image]
+      - name: imagen_alt
+        label: Descripción de la imagen
+        type: string
+        description: Qué se ve en la imagen, para quien no puede verla (lectores de pantalla).
+      - name: body
+        label: Texto de la noticia
+        type: rich-text
+        options:
+          format: markdown
+          path: public/media/noticias
+      - name: ingles
+        label: Versión en inglés (opcional)
+        type: object
+        description: Si se deja vacía, la web en inglés muestra la noticia en español.
+        fields:
+          - name: titulo
+            label: Título
+            type: string
+          - name: resumen
+            label: Resumen
+            type: text
+          - name: texto
+            label: Texto
+            type: rich-text
+            options:
+              format: markdown
+              path: public/media/noticias
+
+  # ── Publicaciones ───────────────────────────────────────────────────────
+  - name: publicaciones
+    label: Publicaciones
+    type: collection
+    path: contenido/publicaciones
+    format: json
+    filename: "{fields.anio}-{fields.titulo}.json"
+    view:
+      fields: [titulo, anio, tipo]
+      primary: titulo
+      sort: [anio, titulo]
+      search: [titulo, autores, medio]
+      default:
+        sort: anio
+        order: desc
+    fields:
+      - name: anio
+        label: Año
+        type: number
+        required: true
+      - name: tipo
+        label: Tipo
+        type: select
+        required: true
+        options:
+          values:
+            - name: articulo
+              label: Artículo de revista
+            - name: capitulo
+              label: Capítulo de libro
+            - name: libro
+              label: Libro
+            - name: congreso
+              label: Comunicación en congreso
+            - name: informe
+              label: Informe
+      - name: autores
+        label: Autoría
+        type: string
+        required: true
+        description: "Como se cita, en formato APA: «Rodríguez-Conde, M.-J., Olmos-Migueláñez, S., & Conley-Torres, C.»"
+      - name: titulo
+        label: Título
+        type: string
+        required: true
+      - name: medio
+        label: Revista, libro, actas o congreso
+        type: string
+        required: true
+        description: Sale en cursiva. Para un congreso, su nombre; para un capítulo, el título del libro o de las actas.
+      - name: editores
+        label: Editores (opcional)
+        type: string
+        description: "Solo para capítulos y actas, sin «(Eds.)»: «M. Feixas, S. Olmos-Migueláñez, & M. García-Herrero»"
+      - name: paginas
+        label: Páginas (opcional)
+        type: string
+        description: "Con raya: 101–103"
+      - name: lugar
+        label: Lugar del congreso (opcional)
+        component: bilingueCorto
+        description: "Ciudad y país: «Oporto (Portugal)»"
+      - name: isbn
+        label: ISBN (opcional)
+        type: string
+      - name: doi
+        label: DOI (opcional)
+        type: string
+        description: "Solo el código: 10.1234/abcd.5678"
+      - name: actas
+        label: Enlace a las actas (opcional)
+        type: string
+        description: "Dirección del PDF de las actas; con #page=N al final se abre en la página de la comunicación."
+        pattern:
+          regex: "^https?://"
+          message: Tiene que ser una dirección web completa (https://…)
+      - name: accesoAbierto
+        label: Versión en acceso abierto (opcional)
+        type: string
+        description: Enlace a GREDOS, Zenodo u otro repositorio.
+        pattern:
+          regex: "^https?://"
+          message: Tiene que ser una dirección web completa (https://…)
+      - name: orden
+        label: Orden (opcional)
+        type: number
+        description: Para ordenar dentro del mismo año y tipo; los números menores salen antes.
+
+  # ── Equipo ──────────────────────────────────────────────────────────────
+  - name: equipo
+    label: Equipo
+    type: collection
+    path: contenido/equipo
+    format: json
+    filename: "{fields.nombre}.json"
+    view:
+      fields: [nombre, rol, institucion]
+      primary: nombre
+      sort: [nombre, orden]
+      search: [nombre]
+      default:
+        sort: orden
+        order: asc
+    fields:
+      - name: nombre
+        label: Nombre y apellidos
+        type: string
+        required: true
+      - name: rol
+        label: Papel en el proyecto
+        type: select
+        required: true
+        options:
+          values:
+            - name: ip
+              label: Investigadora o investigador principal
+            - name: investigador
+              label: Equipo investigador
+            - name: contrato
+              label: Contrato asociado al proyecto
+            - name: trabajo
+              label: Equipo de trabajo
+      - name: institucion
+        label: Institución
+        type: select
+        required: true
+        options:
+          values:
+            - name: usal
+              label: Universidad de Salamanca
+            - name: uco
+              label: Universidad de Córdoba
+            - name: ule
+              label: Universidad de León
+            - name: upsa
+              label: Universidad Pontificia de Salamanca
+            - name: unibasq
+              label: Agencia de Calidad del Sistema Universitario Vasco (Unibasq)
+            - name: dcu
+              label: Dublin City University
+            - name: ubi
+              label: Universidade da Beira Interior
+            - name: ipv
+              label: Instituto Politécnico de Viseu
+      - name: perfil
+        label: Perfil (opcional)
+        type: string
+        description: Enlace a su ficha en el Portal de Investigación, ORCID, Google Scholar…
+        pattern:
+          regex: "^https?://"
+          message: Tiene que ser una dirección web completa (https://…)
+      - name: foto
+        label: Foto (opcional)
+        type: image
+        description: Cuadrada y centrada en la cara. Sin foto, se muestran las iniciales.
+        options:
+          path: public/media/equipo
+          categories: [image]
+      - name: orden
+        label: Orden (opcional)
+        type: number
+        description: Para ordenar dentro de su grupo; los números menores salen antes. Si se deja vacío, va al final.
+
+  # ── Textos del proyecto ─────────────────────────────────────────────────
+  - name: textos
+    label: Textos del proyecto
+    type: file
+    path: contenido/textos.json
+    format: json
+    fields:
+      - name: titulo
+        label: Título del proyecto
+        component: bilingue
+      - name: subtitulo
+        label: Subtítulo
+        component: bilingue
+      - name: presentacion
+        label: Frase de presentación (portada)
+        component: bilingue
+      - name: resumen
+        label: Resumen (pie de página y buscadores)
+        component: bilingue
+      - name: ejes
+        label: Ejes de estudio
+        type: object
+        description: Los tres ejes de la portada y de «El proyecto».
+        fields:
+          - name: estudiantes
+            label: Eje «Estudiantes»
+            type: object
+            fields:
+              - name: titulo
+                label: Título
+                component: bilingueCorto
+              - name: texto
+                label: Texto
+                component: bilingue
+          - name: entorno
+            label: Eje «Entorno de aprendizaje»
+            type: object
+            fields:
+              - name: titulo
+                label: Título
+                component: bilingueCorto
+              - name: texto
+                label: Texto
+                component: bilingue
+          - name: profesorado
+            label: Eje «Profesorado»
+            type: object
+            fields:
+              - name: titulo
+                label: Título
+                component: bilingueCorto
+              - name: texto
+                label: Texto
+                component: bilingue
+      - name: objetivos
+        label: Objetivos
+        type: object
+        list: true
+        fields:
+          - name: texto
+            label: Objetivo
+            component: bilingue
+      - name: objeto
+        label: Objeto de estudio (El proyecto)
+        component: bilingue
+      - name: enfoque
+        label: Enfoque
+        type: object
+        fields:
+          - name: cuantitativo
+            label: Análisis cuantitativo
+            type: object
+            fields:
+              - name: titulo
+                label: Título
+                component: bilingueCorto
+              - name: texto
+                label: Texto
+                component: bilingue
+              - name: nota
+                label: Nota (opcional)
+                component: bilingue
+          - name: cualitativo
+            label: Estudios cualitativos
+            type: object
+            fields:
+              - name: titulo
+                label: Título
+                component: bilingueCorto
+              - name: texto
+                label: Texto
+                component: bilingue
+              - name: nota
+                label: Nota (opcional)
+                component: bilingue
+      - name: transferencia
+        label: Transferencia
+        component: bilingue
+      - name: colaboracion
+        label: Colaboración internacional
+        component: bilingue
+      - name: convocatoria
+        label: Convocatoria (ficha del proyecto)
+        component: bilingue
+      - name: plan
+        label: Plan estatal (ficha del proyecto)
+        component: bilingue
+      - name: financiacion
+        label: Texto de financiación (pie de página)
+        component: bilingue
+      - name: correo
+        label: Correo de contacto (opcional)
+        type: string
+        description: Si se rellena, aparece en el pie de la web.
+
+  # ── Trayectoria ─────────────────────────────────────────────────────────
+  - name: trayectoria
+    label: Trayectoria
+    type: file
+    path: contenido/trayectoria.json
+    format: json
+    list: true
+    fields:
+      - name: acronimo
+        label: Acrónimo
+        type: string
+        required: true
+      - name: anio
+        label: Año
+        type: number
+        required: true
+      - name: titulo
+        label: Título
+        component: bilingue
+      - name: etapa
+        label: Etapa educativa (opcional)
+        component: bilingueCorto
+      - name: web
+        label: Web del proyecto (opcional)
+        type: string
+        pattern:
+          regex: "^https?://"
+          message: Tiene que ser una dirección web completa (https://…)
+      - name: actual
+        label: Es el proyecto actual (QUALITY)
+        type: boolean

@@ -4,12 +4,16 @@
   "private": true,
   "description": "Web del proyecto QUALITY (PID2024-156950NB-I00): evaluación de la calidad de los entornos de aprendizaje centrados en el estudiante en Universidad",
   "scripts": {
+    "contenido": "node scripts/contenido.mjs",
+    "predev": "node scripts/contenido.mjs",
     "dev": "next dev -p 3030",
     "build": "next build",
     "build:static": "node scripts/build-static.mjs",
     "preview:static": "node scripts/serve-static.mjs",
     "lint": "next lint",
+    "pretypecheck": "node scripts/contenido.mjs",
     "typecheck": "tsc --noEmit",
+    "pretest": "node scripts/contenido.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -22,12 +26,15 @@
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.5",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.5.26",
+    "js-yaml": "^5.5.0",
+    "marked": "^18.2.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",

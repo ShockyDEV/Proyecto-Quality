@@ -1,11 +1,12 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { cifrasEquipo, EQUIPO, iniciales, INSTITUCIONES, tipoPerfil } from "@/content/equipo";
-import { PUBLICACIONES } from "@/content/publicaciones";
-import { TRAYECTORIA } from "@/content/trayectoria";
+import { EQUIPO, iniciales, INSTITUCIONES, tipoPerfil } from "@/content/equipo";
 import { href, stripLocale } from "@/lib/i18n";
 
+// El contenido lo editan las investigadoras desde el panel: aquí solo se
+// comprueba lo que tiene que cumplirse siempre (scripts/contenido.mjs ya lo
+// valida al generar; ver también generador.test.ts).
 describe("equipo", () => {
   it("cada persona pertenece a una institución conocida", () => {
     const ids = new Set(INSTITUCIONES.map((i) => i.id));
@@ -16,14 +17,6 @@ describe("equipo", () => {
     expect(new Set(EQUIPO.map((p) => p.name)).size).toBe(EQUIPO.length);
   });
 
-  it("los perfiles son direcciones https válidas", () => {
-    for (const p of EQUIPO) {
-      if (!p.profile) continue;
-      expect(new URL(p.profile).protocol, p.name).toBe("https:");
-      expect(tipoPerfil(p.profile).es, p.name).not.toBe("Perfil");
-    }
-  });
-
   it("cada foto enlazada existe en public/", () => {
     for (const p of EQUIPO) {
       if (!p.photo) continue;
@@ -31,8 +24,10 @@ describe("equipo", () => {
     }
   });
 
-  it("cifras: las 26 personas de la web anterior más un contrato, 8 instituciones, 3 países", () => {
-    expect(cifrasEquipo()).toEqual({ personas: 27, instituciones: 8, paises: 3 });
+  it("rotula el enlace según el sitio del perfil", () => {
+    expect(tipoPerfil("https://produccioncientifica.usal.es/investigadores/1/detalle").es).toBe("Portal de Investigación USAL");
+    expect(tipoPerfil("https://orcid.org/0000-0000-0000-0000").es).toBe("ORCID");
+    expect(tipoPerfil("https://example.org/cv").es).toBe("Perfil");
   });
 
   it("iniciales: nombre y primer apellido, sin partículas", () => {
@@ -40,24 +35,6 @@ describe("equipo", () => {
     expect(iniciales("Alba María del Brio Nieto")).toBe("AB");
     expect(iniciales("Eva Fernández de Labastida")).toBe("EF");
     expect(iniciales("Martin Brown")).toBe("MB");
-  });
-});
-
-describe("trayectoria", () => {
-  it("solo hay un proyecto actual y es QUALITY", () => {
-    const actuales = TRAYECTORIA.filter((p) => p.current);
-    expect(actuales.map((p) => p.acronym)).toEqual(["QUALITY"]);
-  });
-});
-
-describe("publicaciones", () => {
-  it("el enlace a las actas abre la primera página de la comunicación", () => {
-    for (const p of PUBLICACIONES) {
-      if (!p.proceedings) continue;
-      expect(new URL(p.proceedings).protocol, p.title).toBe("https:");
-      expect(p.pages, p.title).toBeDefined();
-      expect(p.proceedings.endsWith(`#page=${p.pages!.split("–")[0]}`), p.title).toBe(true);
-    }
   });
 });
 

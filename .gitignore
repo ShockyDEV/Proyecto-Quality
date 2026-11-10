@@ -11,6 +11,9 @@ next-env.d.ts
 # producción
 /build
 
+# contenido para la web, generado desde contenido/ (scripts/contenido.mjs)
+/src/content/generado/
+
 # entorno (las credenciales NUNCA van a git)
 .env
 .env.local

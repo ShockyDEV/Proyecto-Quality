@@ -1,0 +1,67 @@
+[
+  {
+    "acronimo": "EFI cinco",
+    "anio": 2012,
+    "titulo": {
+      "es": "Evaluación, Formación e Innovación sobre competencias clave en Educación Secundaria: TIC, Competencia INformacional y Resolución de COnflictos",
+      "en": "Assessment, Training and Innovation in key competences in secondary education: ICT, information literacy and conflict resolution"
+    },
+    "etapa": {
+      "es": "Educación Secundaria",
+      "en": "Secondary education"
+    },
+    "web": "https://eficinco.usal.es/",
+    "actual": false
+  },
+  {
+    "acronimo": "EFI cuatro",
+    "anio": 2015,
+    "titulo": {
+      "es": "Evaluación de Impacto del Desarrollo de Competencias Básicas sobre el Rendimiento Académico en Educación Secundaria",
+      "en": "Impact assessment of the development of basic competences on academic performance in secondary education"
+    },
+    "etapa": {
+      "es": "Educación Secundaria",
+      "en": "Secondary education"
+    },
+    "web": "https://eficuatro.usal.es/",
+    "actual": false
+  },
+  {
+    "acronimo": "EFI seis",
+    "anio": 2018,
+    "titulo": {
+      "es": "Escuelas eficaces para la mejora del sistema",
+      "en": "Effective schools for improving the system"
+    },
+    "web": "https://efiseis.grial.eu/",
+    "actual": false
+  },
+  {
+    "acronimo": "EVIDENCE",
+    "anio": 2021,
+    "titulo": {
+      "es": "Evaluación y promoción de la equidad educativa en Educación Secundaria",
+      "en": "Assessing and promoting educational equity in secondary education"
+    },
+    "etapa": {
+      "es": "Educación Secundaria",
+      "en": "Secondary education"
+    },
+    "web": "https://evidence.grial.eu/",
+    "actual": false
+  },
+  {
+    "acronimo": "QUALITY",
+    "anio": 2024,
+    "titulo": {
+      "es": "Evaluación de la calidad de los entornos de aprendizaje centrados en el estudiante en Universidad",
+      "en": "Assessing the quality of student-centred learning environments in higher education"
+    },
+    "etapa": {
+      "es": "Universidad",
+      "en": "Higher education"
+    },
+    "actual": true
+  }
+]
