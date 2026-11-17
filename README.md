@@ -87,7 +87,7 @@ La web la sirve Next (`next start`) en solis, detrás de Apache, en https://soli
 
 Con dominio propio, se compila sin subcarpeta (`QUALITY_BASE`/`PAGES_BASE_PATH` vacíos en `solis-servidor.sh`) y se crea su vhost.
 
-`npm run build:static` sigue generando la versión estática (`out/`), que la CI compila para comprobar que no se rompe; ya no se publica en GitHub Pages.
+`npm run build:static` sigue generando la versión estática (`out/`), aunque ya no se publica en GitHub Pages. La CI compila en modo servidor, como solis.
 
 ## Pendiente de las investigadoras principales
 

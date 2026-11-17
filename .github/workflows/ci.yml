@@ -1,5 +1,6 @@
-# Integración continua: tipos, lint, pruebas y versión estática en cada push
-# y pull request.
+# Integración continua: tipos, lint, pruebas y compilación en cada push y pull
+# request. Solo comprueba: la web la publica solis por su cuenta
+# (scripts/solis-servidor.sh).
 name: CI
 
 on:
@@ -21,4 +22,12 @@ jobs:
       - run: npm run typecheck
       - run: npx eslint src --ext .ts,.tsx
       - run: npm test
-      - run: npm run build:static
+      # La misma compilación que hace solis (modo servidor, subcarpeta /quality).
+      # Un segundo intento si falla: Next descarga las fuentes al compilar y un
+      # corte momentáneo de red no debe dar la comprobación por fallida.
+      - name: Compilar como solis
+        env:
+          PAGES_BASE_PATH: /quality
+          NEXT_PUBLIC_SITE_URL: https://solis.usal.es/quality
+          NEXT_PUBLIC_PUBLICACION: solis
+        run: npx next build || (sleep 20 && npx next build)
